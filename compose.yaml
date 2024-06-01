@@ -1,8 +1,16 @@
 services:
+  mysql:
+    image: 'mysql:latest'
+    environment:
+      - 'MYSQL_INITDB_DATABASE=neuron'
+      - 'MYSQL_INITDB_PASSWORD=glgjss17yfhbqz'
+      - 'MYSQL_INITDB_USERNAME=root'
+    ports:
+      - '3306'
   mongodb:
     image: 'mongo:latest'
     environment:
-      - 'MONGO_INITDB_DATABASE=mydatabase'
+      - 'MONGO_INITDB_DATABASE=neuron'
       - 'MONGO_INITDB_ROOT_PASSWORD=secret'
       - 'MONGO_INITDB_ROOT_USERNAME=root'
     ports:
