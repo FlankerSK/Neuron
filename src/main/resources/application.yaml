@@ -1,5 +1,6 @@
 server:
   port: 8080
+
 spring:
   application:
     name: neuron
@@ -29,3 +30,5 @@ jwt:
   # JWT 的开头
   tokenHead: 'Bearer '
 
+mybatis:
+  mapper-locations: classpath:mapper/*
