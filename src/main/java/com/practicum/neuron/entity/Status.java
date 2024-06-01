@@ -1,4 +1,4 @@
-package com.practicum.neuron.dto;
+package com.practicum.neuron.entity;
 
 import lombok.Builder;
 import lombok.Data;
@@ -11,7 +11,6 @@ import lombok.Data;
 public class Status {
     // 错误码
     private int code;
-
     //错误信息
     private String message;
 
@@ -39,8 +38,10 @@ public class Status {
     public final static Status LOGIN_ACCOUNT_DISABLED = new Status(1006, "账号不可用");
 
     /*  2XXX 注册错误  */
-    public final static Status REGISTER_UNKNOWN_ERROR = new Status(2007, "未知注册错误");
-    public final static Status REGISTER_USER_EXIST = new Status(2008, "用户名已存在");
+    public final static Status REGISTER_UNKNOWN_ERROR = new Status(2000, "未知注册错误");
+    public final static Status REGISTER_USER_EXIST = new Status(2001, "用户名已存在");
+    public final static Status REGISTER_USER_NOT_EXIST = new Status(2002, "用户名不存在");
+    public final static Status REGISTER_SAME_PASSWORD = new Status(2003, "旧密码与新密码相同");
 
     /*  3XXX 访问错误  */
     public final static Status ACCESS_UNKNOWN_ERROR = new Status(3000, "未知访问错误");

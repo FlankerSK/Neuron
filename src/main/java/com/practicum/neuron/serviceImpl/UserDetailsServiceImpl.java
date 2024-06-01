@@ -1,7 +1,8 @@
 package com.practicum.neuron.serviceImpl;
 
+import com.practicum.neuron.entity.UserDto;
 import com.practicum.neuron.mapper.UserMapper;
-import com.practicum.neuron.po.User;
+import com.practicum.neuron.entity.User;
 import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.userdetails.UserDetails;
