@@ -5,7 +5,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
@@ -18,10 +17,6 @@ import java.io.IOException;
 @Component
 public class JwtLoginFilter extends UsernamePasswordAuthenticationFilter {
     static private final ObjectMapper objectMapper = new ObjectMapper();
-
-    public JwtLoginFilter(AuthenticationManager authenticationManager) {
-        super.setAuthenticationManager(authenticationManager);
-    }
 
     @Override
     public Authentication attemptAuthentication(
