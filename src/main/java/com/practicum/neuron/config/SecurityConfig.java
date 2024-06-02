@@ -6,6 +6,7 @@ import com.practicum.neuron.filter.JwtLoginFilter;
 import com.practicum.neuron.handler.*;
 import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -51,14 +52,23 @@ public class SecurityConfig {
     @Resource
     private JwtAuthenticationTokenFilter jwtAuthenticationTokenFilter;
 
+    // 登录 api 入口
+    @Value("${api.account.login}")
+    private String loginUrl;
+
+    // 登出 api 入口
+    @Value("${api.account.logout}")
+    private String logoutUrl;
+
+    // 注册 api 入口
+    @Value("${api.account.register}")
+    private String registerUrl;
+
     @Bean
     public SecurityFilterChain securityFilterChain(
             HttpSecurity http,
             AuthenticationManager authenticationManager
     ) throws Exception {
-        JwtLoginFilter jwtLoginFilter = new JwtLoginFilter(authenticationManager);
-        jwtLoginFilter.setAuthenticationSuccessHandler(loginSuccessHandler);
-        jwtLoginFilter.setAuthenticationFailureHandler(loginFailureHandler);
         return http
                 //禁用HttpBasic认证
                 .httpBasic(AbstractHttpConfigurer::disable)
@@ -67,6 +77,9 @@ public class SecurityConfig {
                 //禁用默认登出页面，设置自定义登出处理器
                 .logout(
                         logout -> logout
+                                .logoutUrl(logoutUrl)
+                                .deleteCookies("JSESSIONID") // 删除session cookie
+                                .invalidateHttpSession(true) // 使session失效
                                 .addLogoutHandler(logoutHandler)
                                 .logoutSuccessHandler(logoutSuccessHandler)
                 )
@@ -75,12 +88,12 @@ public class SecurityConfig {
                 //设置权限
                 .authorizeHttpRequests(
                         auth -> auth
-                                // /refresh 负责刷新access_token
-                                .requestMatchers("/refresh", "/logout").authenticated()
-                                // /admin/ 下是管理员用户的资源区域
-                                .requestMatchers("/admin/**").hasRole("ADMIN")
-                                // /user/ 下是普通用户的资源区域
-                                .requestMatchers("/user/**").hasRole("USER")
+                                // /api/refresh/** (刷新 token) 与登出操作需要认证
+                                .requestMatchers("/api/refresh/**", logoutUrl).authenticated()
+                                // /api/admin/ 下是管理员用户的资源区域
+                                .requestMatchers("/api/admin/**").hasRole("ADMIN")
+                                // /api/user/ 下是普通用户的资源区域
+                                .requestMatchers("/api/user/**").hasRole("USER")
                                 // 其他区域无需认证
                                 .anyRequest().permitAll()
                 )
@@ -92,7 +105,7 @@ public class SecurityConfig {
                                 .accessDeniedHandler(noAuthorityHandler)
                 )
                 //添加JWT的处理过滤器
-                .addFilterAt(jwtLoginFilter, UsernamePasswordAuthenticationFilter.class)
+                .addFilterAt(jwtLoginFilter(authenticationManager), UsernamePasswordAuthenticationFilter.class)
                 .addFilterBefore(jwtAuthenticationTokenFilter, JwtLoginFilter.class)
                 .build();
     }
@@ -110,5 +123,15 @@ public class SecurityConfig {
     @Bean
     public AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration) throws Exception {
         return authenticationConfiguration.getAuthenticationManager();
+    }
+
+    @Bean
+    public JwtLoginFilter jwtLoginFilter(AuthenticationManager authenticationManager) {
+        JwtLoginFilter jwtLoginFilter = new JwtLoginFilter();
+        jwtLoginFilter.setAuthenticationManager(authenticationManager);
+        jwtLoginFilter.setAuthenticationSuccessHandler(loginSuccessHandler);
+        jwtLoginFilter.setAuthenticationFailureHandler(loginFailureHandler);
+        jwtLoginFilter.setFilterProcessesUrl(loginUrl);
+        return jwtLoginFilter;
     }
 }

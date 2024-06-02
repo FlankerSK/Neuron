@@ -45,7 +45,7 @@ public class AccountController {
      * @param request HTTP请求
      * @return 新的 accessToken
      */
-    @PostMapping("/refresh/access-token")
+    @PostMapping("${api.refresh.access-token}")
     public ResponseEntity<ResponseBody> refreshAccessToken(HttpServletRequest request) {
         String token = jwtUtil.getToken(request);
         String username = jwtUtil.getUserNameFromToken(token);
@@ -59,7 +59,7 @@ public class AccountController {
      * @param request HTTP请求
      * @return 新的 refreshToken
      */
-    @PostMapping("/refresh/refresh-token")
+    @PostMapping("${api.refresh.refresh-token}")
     public ResponseEntity<ResponseBody> refreshRefreshToken(HttpServletRequest request) {
         String token = jwtUtil.getToken(request);
         String username = jwtUtil.getUserNameFromToken(token);
@@ -67,7 +67,7 @@ public class AccountController {
         return new ResponseEntity<>(data, HttpStatus.OK);
     }
 
-    @PostMapping("/register")
+    @PostMapping("${api.account.register}")
     public org.springframework.http.ResponseEntity<ResponseBody> register(HttpServletRequest request) throws IOException {
         JsonNode jsonNode = objectMapper.readTree(request.getInputStream());
         String username = jsonNode.get("username").asText();
@@ -102,16 +102,15 @@ public class AccountController {
 
     }
 
-    @GetMapping("/hello")
+    @GetMapping("/api/hello")
     public ResponseEntity<ResponseBody> hello() {
         return new ResponseEntity<>(
                 new ResponseBody(Status.SUCCESS),
                 HttpStatus.OK
         );
-
     }
 
-    @GetMapping("/admin/")
+    @GetMapping("/api/admin/")
     public ResponseEntity<ResponseBody> admin() {
         return new ResponseEntity<>(
                 new ResponseBody(Status.SUCCESS, "请求的的资源"),
@@ -119,7 +118,7 @@ public class AccountController {
         );
     }
 
-    @GetMapping("/user/")
+    @GetMapping("/api/user/")
     public ResponseEntity<ResponseBody> user() {
         return new ResponseEntity<>(
                 new ResponseBody(Status.SUCCESS, "请求的的资源"),
