@@ -83,8 +83,12 @@ public class DesignController {
             );
         }
         catch(Exception e) {
+            Status status = new Status(
+                    Status.TABLE_UNKNOWN_ERROR.getCode(),
+                    e.getMessage()
+            );
             return new ResponseEntity<>(
-                    new ResponseBody(Status.TABLE_UNKNOWN_ERROR),
+                    new ResponseBody(status),
                    HttpStatus.BAD_REQUEST
             );
         }
