@@ -1,4 +1,4 @@
-package com.practicum.neuron.entity;
+package com.practicum.neuron.entity.response;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;

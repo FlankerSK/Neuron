@@ -1,7 +1,7 @@
 package com.practicum.neuron.service;
 
-import com.practicum.neuron.entity.SecurityInfoDto;
-import com.practicum.neuron.entity.UserDto;
+import com.practicum.neuron.entity.account.SecurityInfoDto;
+import com.practicum.neuron.entity.account.UserDto;
 import com.practicum.neuron.exception.SamePasswordException;
 import com.practicum.neuron.exception.UserExistException;
 import com.practicum.neuron.exception.UserNotExistException;

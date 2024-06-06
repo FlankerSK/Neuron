@@ -1,4 +1,4 @@
-package com.practicum.neuron.entity;
+package com.practicum.neuron.entity.response;
 
 import lombok.Builder;
 import lombok.Data;
@@ -51,4 +51,8 @@ public class Status {
     public final static Status ACCESS_NO_AUTHORITY = new Status(3004, "当前用户没有访问权限");
     public final static Status ACCESS_CREDENTIAL_EXPIRED = new Status(3005, "登录凭据已过期");
     public final static Status ACCESS_INVALID_TOKEN = new Status(3006, "无效的Token");
+
+    /* 4XXX 数据采集表错误 */
+    public final static Status TABLE_UNKNOWN_ERROR = new Status(4000, "未知采集表错误");
+    public final static Status TABLE_NOT_EXIST = new Status(4001, "数据采集表不存在");
 }

@@ -1,6 +1,6 @@
 package com.practicum.neuron.serviceImpl;
 
-import com.practicum.neuron.entity.User;
+import com.practicum.neuron.entity.account.User;
 import com.practicum.neuron.mapper.UserMapper;
 import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;

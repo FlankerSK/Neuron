@@ -10,10 +10,12 @@ spring:
     url: jdbc:mysql://localhost:3306/neuron?characterEncoding=utf-8
     username: root
     password: glgjss17yfhbqz
-  # Mongodb数据库配置
-
-  # Redis数据库配置
   data:
+    # Mongodb数据库配置
+    mongodb:
+      uri: mongodb://localhost:27017/
+      database: neuron
+    # Redis数据库配置
     redis:
       host: localhost
       port: 6379
@@ -41,5 +43,13 @@ api:
   refresh:
     access-token: '/api/refresh/access-token'
     refresh-token: '/api/refresh/refresh-token'
+  admin:
+    table:
+      get: '/api/admin/table/get'
+      create: '/api/admin/table/create'
+      release: '/api/admin/table/release'
+      delete: '/api/admin/table/delete'
+    question:
+      update: '/api/admin/question/update'
 
 
