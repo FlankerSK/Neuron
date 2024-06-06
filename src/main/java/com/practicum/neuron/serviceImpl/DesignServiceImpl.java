@@ -35,6 +35,7 @@ public class DesignServiceImpl implements DesignService {
         Optional<Table> t = tableMapper.findById(id);
         if(t.isPresent()) {
             Table table = t.get();
+            table.setUpdateDate(new Date());
             table.setQuestions(questions);
             tableMapper.save(table);
         }
