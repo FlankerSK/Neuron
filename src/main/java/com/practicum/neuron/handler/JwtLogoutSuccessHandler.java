@@ -1,7 +1,7 @@
 package com.practicum.neuron.handler;
 
-import com.practicum.neuron.entity.ResponseBody;
-import com.practicum.neuron.entity.Status;
+import com.practicum.neuron.entity.response.ResponseBody;
+import com.practicum.neuron.entity.response.Status;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.security.core.Authentication;

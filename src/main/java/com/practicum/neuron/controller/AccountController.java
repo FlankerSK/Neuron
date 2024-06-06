@@ -2,13 +2,12 @@ package com.practicum.neuron.controller;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.practicum.neuron.entity.ResponseBody;
-import com.practicum.neuron.entity.SecurityInfoDto;
-import com.practicum.neuron.entity.Status;
-import com.practicum.neuron.entity.UserDto;
+import com.practicum.neuron.entity.account.SecurityInfoDto;
+import com.practicum.neuron.entity.account.UserDto;
+import com.practicum.neuron.entity.response.ResponseBody;
+import com.practicum.neuron.entity.response.Status;
 import com.practicum.neuron.exception.UserExistException;
 import com.practicum.neuron.service.AccountService;
-import com.practicum.neuron.utils.JwtUtil;
 import jakarta.annotation.Resource;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
@@ -28,47 +27,17 @@ import java.io.IOException;
 @RestController
 public class AccountController {
     @Resource
-    PasswordEncoder passwordEncoder;
+    private PasswordEncoder passwordEncoder;
 
     @Resource
     private ObjectMapper objectMapper;
 
     @Resource
-    AccountService accountService;
-
-    @Resource
-    JwtUtil jwtUtil;
-
-    /**
-     * 刷新 accessToken
-     *
-     * @param request HTTP请求
-     * @return 新的 accessToken
-     */
-    @PostMapping("${api.refresh.access-token}")
-    public ResponseEntity<ResponseBody> refreshAccessToken(HttpServletRequest request) {
-        String token = jwtUtil.getToken(request);
-        String username = jwtUtil.getUserNameFromToken(token);
-        ResponseBody data = new ResponseBody(Status.SUCCESS, jwtUtil.createAccessToken(username));
-        return new ResponseEntity<>(data, HttpStatus.OK);
-    }
-
-    /**
-     * 刷新 refreshToken
-     *
-     * @param request HTTP请求
-     * @return 新的 refreshToken
-     */
-    @PostMapping("${api.refresh.refresh-token}")
-    public ResponseEntity<ResponseBody> refreshRefreshToken(HttpServletRequest request) {
-        String token = jwtUtil.getToken(request);
-        String username = jwtUtil.getUserNameFromToken(token);
-        ResponseBody data = new ResponseBody(Status.SUCCESS, jwtUtil.createAccessToken(username));
-        return new ResponseEntity<>(data, HttpStatus.OK);
-    }
+    private AccountService accountService;
 
     @PostMapping("${api.account.register}")
-    public org.springframework.http.ResponseEntity<ResponseBody> register(HttpServletRequest request) throws IOException {
+    public ResponseEntity<ResponseBody> register(HttpServletRequest request)
+            throws IOException {
         JsonNode jsonNode = objectMapper.readTree(request.getInputStream());
         String username = jsonNode.get("username").asText();
         String password = jsonNode.get("password").asText();
@@ -82,40 +51,23 @@ public class AccountController {
                 .build();
         try {
             accountService.register(user, info);
-            return new org.springframework.http.ResponseEntity<>(
+            return new ResponseEntity<>(
                     new ResponseBody(Status.SUCCESS),
                     HttpStatus.OK
             );
         }
         catch (UserExistException e) {
-            return new org.springframework.http.ResponseEntity<>(
+            return new ResponseEntity<>(
                     new ResponseBody(Status.REGISTER_USER_EXIST),
                     HttpStatus.OK
             );
         }
         catch (Exception e) {
-            return new org.springframework.http.ResponseEntity<>(
+            return new ResponseEntity<>(
                     new ResponseBody(Status.REGISTER_UNKNOWN_ERROR),
                     HttpStatus.OK
             );
         }
-
-    }
-
-    @GetMapping("/api/hello")
-    public ResponseEntity<ResponseBody> hello() {
-        return new ResponseEntity<>(
-                new ResponseBody(Status.SUCCESS),
-                HttpStatus.OK
-        );
-    }
-
-    @GetMapping("/api/admin/")
-    public ResponseEntity<ResponseBody> admin() {
-        return new ResponseEntity<>(
-                new ResponseBody(Status.SUCCESS, "请求的的资源"),
-                HttpStatus.OK
-        );
     }
 
     @GetMapping("/api/user/")

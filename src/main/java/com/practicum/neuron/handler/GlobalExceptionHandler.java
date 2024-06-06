@@ -1,8 +1,8 @@
 package com.practicum.neuron.handler;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.practicum.neuron.entity.ResponseBody;
-import com.practicum.neuron.entity.Status;
+import com.practicum.neuron.entity.response.ResponseBody;
+import com.practicum.neuron.entity.response.Status;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;

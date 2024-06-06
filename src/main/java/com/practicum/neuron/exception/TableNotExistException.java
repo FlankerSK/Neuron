@@ -1,8 +1,8 @@
 package com.practicum.neuron.exception;
 
-public class UserExistException extends Exception {
+public class TableNotExistException extends Exception {
     @Override
     public String getMessage() {
-        return "用户已存在";
+        return "采集表已经存在";
     }
 }

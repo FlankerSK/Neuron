@@ -1,7 +1,7 @@
 package com.practicum.neuron.mapper;
 
-import com.practicum.neuron.entity.SecurityInfoDto;
-import com.practicum.neuron.entity.UserDto;
+import com.practicum.neuron.entity.account.SecurityInfoDto;
+import com.practicum.neuron.entity.account.UserDto;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
