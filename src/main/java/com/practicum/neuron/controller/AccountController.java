@@ -35,7 +35,7 @@ public class AccountController {
     @Resource
     private AccountService accountService;
 
-    @PostMapping("${api.account.register}")
+    @PostMapping("/api/account/register")
     public ResponseEntity<ResponseBody> register(HttpServletRequest request)
             throws IOException {
         JsonNode jsonNode = objectMapper.readTree(request.getInputStream());

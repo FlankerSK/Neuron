@@ -33,4 +33,4 @@ VALUES
 INSERT INTO security_info (username, email)
 VALUES
     ('test1', 'communicationGCY@outlook.com'),
-    ('test2', 'communicationGCY@outlook.com')
+    ('test2', 'communicationGCY@outlook.com');

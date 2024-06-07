@@ -53,16 +53,12 @@ public class SecurityConfig {
     private JwtAuthenticationTokenFilter jwtAuthenticationTokenFilter;
 
     // 登录 api 入口
-    @Value("${api.account.login}")
+    @Value("/api/account/login")
     private String loginUrl;
 
     // 登出 api 入口
-    @Value("${api.account.logout}")
+    @Value("/api/account/logout")
     private String logoutUrl;
-
-    // 注册 api 入口
-    @Value("${api.account.register}")
-    private String registerUrl;
 
     @Bean
     public SecurityFilterChain securityFilterChain(

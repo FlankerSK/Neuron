@@ -25,7 +25,7 @@ public class JwtController {
      * @param request HTTP请求
      * @return 新的 accessToken
      */
-    @PostMapping("${api.refresh.access-token}")
+    @PostMapping("/api/refresh/access-token")
     public ResponseEntity<ResponseBody> refreshAccessToken(HttpServletRequest request) {
         String token = jwtUtil.getToken(request);
         String username = jwtUtil.getUserNameFromToken(token);
@@ -39,11 +39,13 @@ public class JwtController {
      * @param request HTTP请求
      * @return 新的 refreshToken
      */
-    @PostMapping("${api.refresh.refresh-token}")
+    @PostMapping("/api/refresh/refresh-token")
     public ResponseEntity<ResponseBody> refreshRefreshToken(HttpServletRequest request) {
         String token = jwtUtil.getToken(request);
         String username = jwtUtil.getUserNameFromToken(token);
         ResponseBody data = new ResponseBody(Status.SUCCESS, jwtUtil.createAccessToken(username));
+        // 注销令牌
+        jwtUtil.blockToken(token, token, username);
         return new ResponseEntity<>(data, HttpStatus.OK);
     }
 }

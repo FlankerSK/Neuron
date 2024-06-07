@@ -51,8 +51,13 @@ public class Status {
     public final static Status ACCESS_NO_AUTHORITY = new Status(3004, "当前用户没有访问权限");
     public final static Status ACCESS_CREDENTIAL_EXPIRED = new Status(3005, "登录凭据已过期");
     public final static Status ACCESS_INVALID_TOKEN = new Status(3006, "无效的Token");
+    public final static Status ACCESS_INVALID_PARAMETER = new Status(3007, "无效的参数");
 
     /* 4XXX 数据采集表错误 */
     public final static Status TABLE_UNKNOWN_ERROR = new Status(4000, "未知采集表错误");
     public final static Status TABLE_NOT_EXIST = new Status(4001, "数据采集表不存在");
+    public final static Status TABLE_UNPUBLISHED = new Status(4002, "数据采集表未发布");
+    public final static Status TABLE_ALREADY_PUBLISHED = new Status(4003, "数据采集表已发布");
+    public final static Status TABLE_ALREADY_END = new Status(4004, "数据采集表已结束收集");
+    public final static Status TABLE_INVALID_TIME = new Status(4005, "无效的时间参数");
 }
