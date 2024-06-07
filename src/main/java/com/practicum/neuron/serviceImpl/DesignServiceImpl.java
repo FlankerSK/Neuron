@@ -2,6 +2,7 @@ package com.practicum.neuron.serviceImpl;
 
 import com.practicum.neuron.entity.FillRule;
 import com.practicum.neuron.entity.ReleaseInfo;
+import com.practicum.neuron.entity.table.AdminTableSummary;
 import com.practicum.neuron.entity.table.Table;
 import com.practicum.neuron.entity.table.TableStatus;
 import com.practicum.neuron.exception.TableAlreadyEndException;
@@ -17,6 +18,7 @@ import org.bson.Document;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -84,7 +86,7 @@ public class DesignServiceImpl implements DesignService {
     }
 
     @Override
-    public void stopRelease(String id) throws TableUnpublishException, TableAlreadyEndException, TableNotExistException {
+    public void stopRelease(String id) throws TableNotExistException, TableUnpublishException, TableAlreadyEndException {
         Optional<Table> t = tableMapper.findById(id);
         if(t.isPresent()) {
             Table table = t.get();
@@ -104,5 +106,33 @@ public class DesignServiceImpl implements DesignService {
     @Override
     public void deleteTable(String id) throws TableNotExistException {
 
+    }
+
+    @Override
+    public List<AdminTableSummary> getTableSummary(String username) {
+        List<Table> tableList = tableMapper.findTablesByAuthor(username);
+        List<AdminTableSummary> tableSummaryList = new ArrayList<>();
+        for (Table table : tableList) {
+            tableSummaryList.add(
+                    AdminTableSummary.builder()
+                            .id(table.getId())
+                            .tittle(table.getTittle())
+                            .updateDate(table.getUpdateDate())
+                            .status(table.getStatus())
+                            .build()
+            );
+        }
+        return tableSummaryList;
+    }
+
+    @Override
+    public Table getTable(String id) throws TableNotExistException{
+        Optional<Table> t =  tableMapper.findById(id);
+        if(t.isPresent()) {
+            return t.get();
+        }
+        else {
+            throw new TableNotExistException();
+        }
     }
 }
