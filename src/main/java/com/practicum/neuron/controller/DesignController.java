@@ -5,6 +5,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.practicum.neuron.entity.FillRule;
 import com.practicum.neuron.entity.response.ResponseBody;
 import com.practicum.neuron.entity.response.Status;
+import com.practicum.neuron.entity.table.AdminTableSummary;
+import com.practicum.neuron.entity.table.Table;
 import com.practicum.neuron.exception.TableAlreadyEndException;
 import com.practicum.neuron.exception.TableAlreadyPublishedException;
 import com.practicum.neuron.exception.TableNotExistException;
@@ -24,6 +26,7 @@ import java.io.IOException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
+import java.util.List;
 
 
 /**
@@ -40,14 +43,6 @@ public class DesignController {
 
     @Resource
     private DesignService designService;
-
-    @GetMapping("/api/admin/test")
-    public ResponseEntity<ResponseBody> admin() {
-        return new ResponseEntity<>(
-                new ResponseBody(Status.SUCCESS, "请求的的资源"),
-                HttpStatus.OK
-        );
-    }
 
     @PostMapping("/api/admin/table")
     public ResponseEntity<ResponseBody> createTable(HttpServletRequest request)
@@ -201,6 +196,34 @@ public class DesignController {
         catch (Exception e) {
             return new ResponseEntity<>(
                     new ResponseBody(Status.TABLE_UNKNOWN_ERROR),
+                    HttpStatus.BAD_REQUEST
+            );
+        }
+    }
+
+    @GetMapping("/api/admin/table")
+    public ResponseEntity<ResponseBody> getTableSummary(HttpServletRequest request) {
+        String token = jwtUtil.getToken(request);
+        String author = jwtUtil.getUserNameFromToken(token);
+        List<AdminTableSummary> summaryList = designService.getTableSummary(author);
+        return new ResponseEntity<>(
+                new ResponseBody(Status.SUCCESS, summaryList),
+                HttpStatus.OK
+        );
+    }
+
+    @GetMapping("/api/admin/table/{id}")
+    public ResponseEntity<ResponseBody> getTableSummary(@PathVariable String id, HttpServletRequest request) {
+        try {
+            Table table = designService.getTable(id);
+            return new ResponseEntity<>(
+                    new ResponseBody(Status.SUCCESS, table),
+                    HttpStatus.OK
+            );
+        }
+        catch (TableNotExistException e) {
+            return new ResponseEntity<>(
+                    new ResponseBody(Status.TABLE_NOT_EXIST),
                     HttpStatus.BAD_REQUEST
             );
         }

@@ -83,7 +83,8 @@ public class JwtAuthenticationTokenFilter extends OncePerRequestFilter {
                         }
                     }
                     catch (UsernameNotFoundException e) {
-                        log.info(e.getMessage());
+                        badTokenHandler.handleInvalidTokenException(response);
+                        return;
                     }
                 }
             }
