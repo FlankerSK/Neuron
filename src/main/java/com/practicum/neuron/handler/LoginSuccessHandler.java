@@ -36,7 +36,6 @@ public class LoginSuccessHandler implements AuthenticationSuccessHandler {
         Map<String, Object> data = new HashMap<>();
         data.put("refresh_token", refreshToken);
         data.put("access_token", accessToken);
-        data.put("username", user.getUsername());
         data.put("role", user.getRole());
         response.getWriter().write(new ResponseBody(Status.SUCCESS, data).toJson());
         response.getWriter().flush();

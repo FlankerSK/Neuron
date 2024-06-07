@@ -35,21 +35,5 @@ jwt:
 mybatis:
   mapper-locations: classpath:mapper/*
 
-api:
-  account:
-    login: '/api/account/login'
-    logout: '/api/account/logout'
-    register: '/api/account/register'
-  refresh:
-    access-token: '/api/refresh/access-token'
-    refresh-token: '/api/refresh/refresh-token'
-  admin:
-    table:
-      get: '/api/admin/table/get'
-      create: '/api/admin/table/create'
-      release: '/api/admin/table/release'
-      delete: '/api/admin/table/delete'
-    question:
-      update: '/api/admin/question/update'
 
 

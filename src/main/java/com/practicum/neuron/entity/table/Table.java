@@ -7,15 +7,15 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 @Data
 @Builder
 @Document("tables")
 public class Table {
-    // id
+    // tableId
     @Id
     private String id;
 
@@ -30,7 +30,7 @@ public class Table {
     // 更新时间，默认为创建时间
     @Default
     @Field("update_date")
-    private Date updateDate = new Date();
+    private LocalDateTime updateDate = LocalDateTime.now();
 
     // 问题列表，一开始为空
     @Default

@@ -2,9 +2,13 @@ package com.practicum.neuron.controller;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.practicum.neuron.entity.FillRule;
 import com.practicum.neuron.entity.response.ResponseBody;
 import com.practicum.neuron.entity.response.Status;
+import com.practicum.neuron.exception.TableAlreadyEndException;
+import com.practicum.neuron.exception.TableAlreadyPublishedException;
 import com.practicum.neuron.exception.TableNotExistException;
+import com.practicum.neuron.exception.TableUnpublishException;
 import com.practicum.neuron.service.DesignService;
 import com.practicum.neuron.utils.JwtUtil;
 import jakarta.annotation.Resource;
@@ -14,10 +18,11 @@ import org.bson.Document;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
 
 
@@ -44,7 +49,7 @@ public class DesignController {
         );
     }
 
-    @PostMapping("${api.admin.table.create}")
+    @PostMapping("/api/admin/table")
     public ResponseEntity<ResponseBody> createTable(HttpServletRequest request)
             throws IOException {
         JsonNode jsonNode = objectMapper.readTree(request.getInputStream());
@@ -58,11 +63,11 @@ public class DesignController {
         );
     }
 
-    @PostMapping("${api.admin.question.update}")
-    public ResponseEntity<ResponseBody> updateQuestion(HttpServletRequest request)
+    @PutMapping("/api/admin/table/{id}")
+    public ResponseEntity<ResponseBody> updateTable(@PathVariable String id, HttpServletRequest request)
             throws IOException {
         JsonNode jsonNode = objectMapper.readTree(request.getInputStream());
-        String id = jsonNode.get("id").asText();
+        String title = jsonNode.get("title").asText();
         JsonNode questionListNode = jsonNode.get("questions");
         ArrayList<Document> questions = new ArrayList<>();
         for (JsonNode questionNode : questionListNode) {
@@ -70,7 +75,7 @@ public class DesignController {
             questions.add(question);
         }
         try{
-            designService.updateQuestion(id, questions);
+            designService.updateQuestion(id, title, questions);
             return new ResponseEntity<>(
                     new ResponseBody(Status.SUCCESS),
                     HttpStatus.OK
@@ -90,6 +95,113 @@ public class DesignController {
             return new ResponseEntity<>(
                     new ResponseBody(status),
                    HttpStatus.BAD_REQUEST
+            );
+        }
+    }
+
+    @PostMapping("/api/admin/table/{id}/release")
+    public ResponseEntity<ResponseBody> releaseTable(@PathVariable String id, HttpServletRequest request)
+            throws IOException {
+        JsonNode jsonNode = objectMapper.readTree(request.getInputStream());
+        try {
+            LocalDateTime beginning = LocalDateTime.parse(jsonNode.get("beginning").asText());
+            LocalDateTime deadline = LocalDateTime.parse(jsonNode.get("deadline").asText());
+            FillRule rule = objectMapper.treeToValue(jsonNode.get("fill_rule"), FillRule.class);
+            if (beginning.isBefore(deadline)) {
+                designService.releaseTable(id, beginning, deadline, rule);
+                return new ResponseEntity<>(
+                        new ResponseBody(Status.SUCCESS),
+                        HttpStatus.OK
+                );
+            }
+            else {
+                return new ResponseEntity<>(
+                        new ResponseBody(Status.TABLE_INVALID_TIME),
+                        HttpStatus.BAD_REQUEST
+                );
+            }
+        }
+        catch (DateTimeParseException e) {
+            return new ResponseEntity<>(
+                    new ResponseBody(Status.TABLE_INVALID_TIME),
+                    HttpStatus.BAD_REQUEST
+            );
+        }
+        catch (NullPointerException e) {
+            return new ResponseEntity<>(
+                    new ResponseBody(Status.ACCESS_INVALID_PARAMETER),
+                    HttpStatus.BAD_REQUEST
+            );
+        }
+        catch (TableNotExistException e) {
+            return new ResponseEntity<>(
+                    new ResponseBody(Status.TABLE_NOT_EXIST),
+                    HttpStatus.BAD_REQUEST
+            );
+        }
+        catch (TableAlreadyPublishedException e) {
+            return new ResponseEntity<>(
+                    new ResponseBody(Status.TABLE_ALREADY_PUBLISHED),
+                    HttpStatus.BAD_REQUEST
+            );
+        }
+        catch (TableAlreadyEndException e) {
+            return new ResponseEntity<>(
+                    new ResponseBody(Status.TABLE_ALREADY_END),
+                    HttpStatus.BAD_REQUEST
+            );
+        }
+        catch (Exception e) {
+            return new ResponseEntity<>(
+                    new ResponseBody(Status.TABLE_UNKNOWN_ERROR),
+                    HttpStatus.BAD_REQUEST
+            );
+        }
+    }
+
+    @DeleteMapping("/api/admin/table/{id}/release")
+    public ResponseEntity<ResponseBody> stopReleaseTable(@PathVariable String id) {
+        try {
+            designService.stopRelease(id);
+            return new ResponseEntity<>(
+                    new ResponseBody(Status.SUCCESS),
+                    HttpStatus.OK
+            );
+        }
+        catch (DateTimeParseException e) {
+            return new ResponseEntity<>(
+                    new ResponseBody(Status.TABLE_INVALID_TIME),
+                    HttpStatus.BAD_REQUEST
+            );
+        }
+        catch (NullPointerException e) {
+            return new ResponseEntity<>(
+                    new ResponseBody(Status.ACCESS_INVALID_PARAMETER),
+                    HttpStatus.BAD_REQUEST
+            );
+        }
+        catch (TableNotExistException e) {
+            return new ResponseEntity<>(
+                    new ResponseBody(Status.TABLE_NOT_EXIST),
+                    HttpStatus.BAD_REQUEST
+            );
+        }
+        catch (TableUnpublishException e) {
+            return new ResponseEntity<>(
+                    new ResponseBody(Status.TABLE_UNPUBLISHED),
+                    HttpStatus.BAD_REQUEST
+            );
+        }
+        catch (TableAlreadyEndException e) {
+            return new ResponseEntity<>(
+                    new ResponseBody(Status.TABLE_ALREADY_END),
+                    HttpStatus.BAD_REQUEST
+            );
+        }
+        catch (Exception e) {
+            return new ResponseEntity<>(
+                    new ResponseBody(Status.TABLE_UNKNOWN_ERROR),
+                    HttpStatus.BAD_REQUEST
             );
         }
     }
