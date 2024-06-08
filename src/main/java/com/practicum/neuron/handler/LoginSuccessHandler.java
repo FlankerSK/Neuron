@@ -1,6 +1,6 @@
 package com.practicum.neuron.handler;
 
-import com.practicum.neuron.entity.account.User;
+import com.practicum.neuron.entity.account.LoginUser;
 import com.practicum.neuron.entity.response.ResponseBody;
 import com.practicum.neuron.entity.response.Status;
 import com.practicum.neuron.utils.JwtUtil;
@@ -26,9 +26,9 @@ public class LoginSuccessHandler implements AuthenticationSuccessHandler {
             HttpServletResponse response,
             Authentication authentication
     ) throws IOException {
-        User user = (User) authentication.getPrincipal();
-        String refreshToken = jwtUtil.createRefreshToken(user.getUsername());
-        String accessToken = jwtUtil.createAccessToken(user.getUsername());
+        LoginUser loginUser = (LoginUser) authentication.getPrincipal();
+        String refreshToken = jwtUtil.createRefreshToken(loginUser.getUsername());
+        String accessToken = jwtUtil.createAccessToken(loginUser.getUsername());
         // 发送响应
         response.setCharacterEncoding("UTF-8");
         response.setContentType("application/json");
@@ -36,7 +36,7 @@ public class LoginSuccessHandler implements AuthenticationSuccessHandler {
         Map<String, Object> data = new HashMap<>();
         data.put("refresh_token", refreshToken);
         data.put("access_token", accessToken);
-        data.put("role", user.getRole());
+        data.put("role", loginUser.getRole());
         response.getWriter().write(new ResponseBody(Status.SUCCESS, data).toJson());
         response.getWriter().flush();
     }

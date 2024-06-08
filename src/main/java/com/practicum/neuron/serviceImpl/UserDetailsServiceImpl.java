@@ -1,7 +1,7 @@
 package com.practicum.neuron.serviceImpl;
 
-import com.practicum.neuron.entity.account.User;
-import com.practicum.neuron.mapper.UserMapper;
+import com.practicum.neuron.entity.account.LoginUser;
+import com.practicum.neuron.mapper.LoginUserMapper;
 import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -13,14 +13,14 @@ import org.springframework.stereotype.Component;
 @Component
 public class UserDetailsServiceImpl implements UserDetailsService {
     @Resource
-    private UserMapper userMapper;
+    private LoginUserMapper loginUserMapper;
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        User user = userMapper.findUserFromUsername(username);
-        if (user == null) {
+        LoginUser loginUser = loginUserMapper.findUserFromUsername(username);
+        if (loginUser == null) {
             throw new UsernameNotFoundException("用户名或密码错误");
         }
-        return user;
+        return loginUser;
     }
 }

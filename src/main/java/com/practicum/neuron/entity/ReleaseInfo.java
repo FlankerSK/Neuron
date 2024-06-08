@@ -22,6 +22,14 @@ public class ReleaseInfo {
     @Field("table_id")
     private String tableId;
 
+    // 标题
+    @Field("title")
+    private String title;
+
+    // 作者
+    @Field("author")
+    private String author;
+
     // 开始日期, 默认为现在
     @Default
     @Field("beginning")

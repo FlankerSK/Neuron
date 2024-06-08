@@ -1,7 +1,7 @@
 package com.practicum.neuron.serviceImpl;
 
-import com.practicum.neuron.entity.account.SecurityInfoDto;
-import com.practicum.neuron.entity.account.UserDto;
+import com.practicum.neuron.entity.account.SecurityInfo;
+import com.practicum.neuron.entity.account.User;
 import com.practicum.neuron.exception.SamePasswordException;
 import com.practicum.neuron.exception.UserExistException;
 import com.practicum.neuron.exception.UserNotExistException;
@@ -21,24 +21,24 @@ public class AccountServiceImpl implements AccountService {
     private AccountMapper accountMapper;
 
     @Override
-    public UserDto getUser(String username) {
-        return accountMapper.queryUser(username);
+    public User getUser(String username) {
+        return accountMapper.findUserByUsername(username);
     }
 
     @Override
-    public SecurityInfoDto getSecurityInfo(String username) {
-        return accountMapper.querySecurityInfo(username);
+    public SecurityInfo getSecurityInfo(String username) {
+        return accountMapper.findSecurityInfoByUsername(username);
     }
 
     @Override
-    public void register(UserDto userDto, SecurityInfoDto securityInfo) throws UserExistException {
-        String username = userDto.getUsername();
-        String password = userDto.getPassword();
-        String role = userDto.getRole();
+    public void register(User user, SecurityInfo securityInfo) throws UserExistException {
+        String username = user.getUsername();
+        String password = user.getPassword();
+        String role = user.getRole();
         String email = securityInfo.getEmail();
         String phone = securityInfo.getPhone();
         // 如果用户名已经存在，抛出异常
-        if (accountMapper.queryUser(username) != null) {
+        if (accountMapper.findUserByUsername(username) != null) {
             throw new UserExistException();
         }
         // 向数据库中添加用户信息与安全绑定信息
@@ -47,10 +47,10 @@ public class AccountServiceImpl implements AccountService {
     }
 
     @Override
-    public void changePassword(UserDto userDto)
+    public void changePassword(User userDto)
             throws SamePasswordException, UserNotExistException {
         String username = userDto.getUsername();
-        UserDto user = accountMapper.queryUser(username);
+        User user = accountMapper.findUserByUsername(username);
         // 如果用户不存在，抛出异常
         if (user == null) {
             throw new UserNotExistException();
@@ -66,15 +66,15 @@ public class AccountServiceImpl implements AccountService {
     }
 
     @Override
-    public void deleteUser(UserDto userDto) throws UserNotExistException {
+    public void deleteUser(User userDto) throws UserNotExistException {
         String username = userDto.getUsername();
-        UserDto user = accountMapper.queryUser(username);
+        User user = accountMapper.findUserByUsername(username);
         // 如果用户不存在，抛出异常
         if (user == null) {
             throw new UserNotExistException();
         }
         // 删除用户信息与安全认证信息
-        accountMapper.deleteUser(username);
+        accountMapper.deleteUserByUsername(username);
         accountMapper.deleteSecurityInfo(username);
     }
 }

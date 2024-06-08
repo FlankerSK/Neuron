@@ -6,11 +6,11 @@ import lombok.Builder.Default;
 import lombok.Data;
 
 /**
- * 安全绑定信息 DTO.
+ * 安全绑定信息
  */
 @Data
 @Builder
-public class SecurityInfoDto {
+public class SecurityInfo {
     @Default
     private String email = "";
 

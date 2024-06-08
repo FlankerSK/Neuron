@@ -2,7 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.practicum.neuron.mapper.AccountMapper">
-    <select id="queryUser" resultType="com.practicum.neuron.entity.account.UserDto">
+    <select id="findUserByUsername" resultType="com.practicum.neuron.entity.account.User">
         SELECT username, password, role
         FROM users WHERE username = #{username}
     </select>
@@ -14,7 +14,7 @@
         INSERT INTO security_info (username, email, phone)
         VALUE (#{username}, #{email}, #{phone})
     </insert>
-    <select id="querySecurityInfo" resultType="com.practicum.neuron.entity.account.SecurityInfoDto">
+    <select id="findSecurityInfoByUsername" resultType="com.practicum.neuron.entity.account.SecurityInfo">
         SELECT email, phone
         FROM security_info WHERE username = #{username}
     </select>
@@ -22,10 +22,13 @@
         UPDATE users SET password = #{password}
         WHERE username = #{username}
     </update>
-    <delete id="deleteUser">
+    <delete id="deleteUserByUsername">
         DELETE FROM users WHERE username = #{username}
     </delete>
-    <delete id="deleteSecurityInfo">
+    <delete id="deleteSecurityInfoByUsername">
         DELETE FROM security_info WHERE username = #{username}
     </delete>
+    <select id="findUserInfoByUsername" resultType="com.practicum.neuron.entity.account.UserInfo">
+        SELECT username  from users where username = #{username};
+    </select>
 </mapper>

@@ -22,7 +22,7 @@ public class Table {
 
     // 表标题
     @Field("title")
-    private String tittle;
+    private String title;
 
     // 作者
     @Indexed
