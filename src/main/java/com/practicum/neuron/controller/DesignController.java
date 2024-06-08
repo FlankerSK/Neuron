@@ -79,7 +79,7 @@ public class DesignController {
         catch(TableNotExistException e) {
             return new ResponseEntity<>(
                     new ResponseBody(Status.TABLE_NOT_EXIST),
-                    HttpStatus.BAD_REQUEST
+                    HttpStatus.NOT_FOUND
             );
         }
         catch(Exception e) {
@@ -89,7 +89,7 @@ public class DesignController {
             );
             return new ResponseEntity<>(
                     new ResponseBody(status),
-                   HttpStatus.BAD_REQUEST
+                   HttpStatus.FORBIDDEN
             );
         }
     }
@@ -131,19 +131,19 @@ public class DesignController {
         catch (TableNotExistException e) {
             return new ResponseEntity<>(
                     new ResponseBody(Status.TABLE_NOT_EXIST),
-                    HttpStatus.BAD_REQUEST
+                    HttpStatus.NOT_FOUND
             );
         }
         catch (TableAlreadyPublishedException e) {
             return new ResponseEntity<>(
                     new ResponseBody(Status.TABLE_ALREADY_PUBLISHED),
-                    HttpStatus.BAD_REQUEST
+                    HttpStatus.FORBIDDEN
             );
         }
         catch (TableAlreadyEndException e) {
             return new ResponseEntity<>(
                     new ResponseBody(Status.TABLE_ALREADY_END),
-                    HttpStatus.BAD_REQUEST
+                    HttpStatus.FORBIDDEN
             );
         }
         catch (Exception e) {
@@ -178,25 +178,25 @@ public class DesignController {
         catch (TableNotExistException e) {
             return new ResponseEntity<>(
                     new ResponseBody(Status.TABLE_NOT_EXIST),
-                    HttpStatus.BAD_REQUEST
+                    HttpStatus.FORBIDDEN
             );
         }
         catch (TableUnpublishException e) {
             return new ResponseEntity<>(
                     new ResponseBody(Status.TABLE_UNPUBLISHED),
-                    HttpStatus.BAD_REQUEST
+                    HttpStatus.FORBIDDEN
             );
         }
         catch (TableAlreadyEndException e) {
             return new ResponseEntity<>(
                     new ResponseBody(Status.TABLE_ALREADY_END),
-                    HttpStatus.BAD_REQUEST
+                    HttpStatus.FORBIDDEN
             );
         }
         catch (Exception e) {
             return new ResponseEntity<>(
                     new ResponseBody(Status.TABLE_UNKNOWN_ERROR),
-                    HttpStatus.BAD_REQUEST
+                    HttpStatus.FORBIDDEN
             );
         }
     }
@@ -204,8 +204,8 @@ public class DesignController {
     @GetMapping("/api/admin/table")
     public ResponseEntity<ResponseBody> getTableSummary(HttpServletRequest request) {
         String token = jwtUtil.getToken(request);
-        String author = jwtUtil.getUserNameFromToken(token);
-        List<AdminTableSummary> summaryList = designService.getTableSummary(author);
+        String username = jwtUtil.getUserNameFromToken(token);
+        List<AdminTableSummary> summaryList = designService.getTableSummary(username);
         return new ResponseEntity<>(
                 new ResponseBody(Status.SUCCESS, summaryList),
                 HttpStatus.OK
@@ -213,7 +213,7 @@ public class DesignController {
     }
 
     @GetMapping("/api/admin/table/{id}")
-    public ResponseEntity<ResponseBody> getTableSummary(@PathVariable String id, HttpServletRequest request) {
+    public ResponseEntity<ResponseBody> getTable(@PathVariable String id) {
         try {
             Table table = designService.getTable(id);
             return new ResponseEntity<>(
@@ -224,7 +224,7 @@ public class DesignController {
         catch (TableNotExistException e) {
             return new ResponseEntity<>(
                     new ResponseBody(Status.TABLE_NOT_EXIST),
-                    HttpStatus.BAD_REQUEST
+                    HttpStatus.NOT_FOUND
             );
         }
     }

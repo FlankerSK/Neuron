@@ -1,7 +1,8 @@
 package com.practicum.neuron.mapper;
 
-import com.practicum.neuron.entity.account.SecurityInfoDto;
-import com.practicum.neuron.entity.account.UserDto;
+import com.practicum.neuron.entity.account.SecurityInfo;
+import com.practicum.neuron.entity.account.User;
+import com.practicum.neuron.entity.account.UserInfo;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
@@ -15,9 +16,9 @@ public interface AccountMapper {
      * 获取用户信息
      *
      * @param username 用户名
-     * @return 用户 DTO
+     * @return 用户对象 user
      */
-    UserDto queryUser(@Param("username") String username);
+    User findUserByUsername(@Param("username") String username);
 
     /**
      * 增加用户
@@ -51,7 +52,7 @@ public interface AccountMapper {
      * @param username 用户名
      * @return 安全绑定信息 DTO
      */
-    SecurityInfoDto querySecurityInfo(@Param("username") String username);
+    SecurityInfo findSecurityInfoByUsername(@Param("username") String username);
 
     /**
      * 修改密码
@@ -69,7 +70,7 @@ public interface AccountMapper {
      *
      * @param username 用户名
      */
-    void deleteUser(@Param("username") String username);
+    void deleteUserByUsername(@Param("username") String username);
 
     /**
      * 删除用户安全绑定信息
@@ -77,4 +78,13 @@ public interface AccountMapper {
      * @param username 用户名
      */
     void deleteSecurityInfo(@Param("username") String username);
+
+
+    /**
+     * 根据用户名查询用户信息
+     *
+     * @param username the username
+     * @return the user info
+     */
+    UserInfo findUserInfoByUsername(@Param("username") String username);
 }

@@ -2,8 +2,8 @@ package com.practicum.neuron.controller;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.practicum.neuron.entity.account.SecurityInfoDto;
-import com.practicum.neuron.entity.account.UserDto;
+import com.practicum.neuron.entity.account.SecurityInfo;
+import com.practicum.neuron.entity.account.User;
 import com.practicum.neuron.entity.response.ResponseBody;
 import com.practicum.neuron.entity.response.Status;
 import com.practicum.neuron.exception.UserExistException;
@@ -14,7 +14,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -45,8 +44,8 @@ public class AccountController {
         String role = jsonNode.get("role").asText();
         // 对密码进行加密
         String encodePassword = passwordEncoder.encode(password);
-        UserDto user = new UserDto(username, encodePassword, role);
-        SecurityInfoDto info = SecurityInfoDto.builder()
+        User user = new User(username, encodePassword, role);
+        SecurityInfo info = SecurityInfo.builder()
                 .email(email)
                 .build();
         try {
@@ -59,22 +58,14 @@ public class AccountController {
         catch (UserExistException e) {
             return new ResponseEntity<>(
                     new ResponseBody(Status.REGISTER_USER_EXIST),
-                    HttpStatus.OK
+                    HttpStatus.FORBIDDEN
             );
         }
         catch (Exception e) {
             return new ResponseEntity<>(
                     new ResponseBody(Status.REGISTER_UNKNOWN_ERROR),
-                    HttpStatus.OK
+                    HttpStatus.FORBIDDEN
             );
         }
-    }
-
-    @GetMapping("/api/user/")
-    public ResponseEntity<ResponseBody> user() {
-        return new ResponseEntity<>(
-                new ResponseBody(Status.SUCCESS, "请求的的资源"),
-                HttpStatus.OK
-        );
     }
 }

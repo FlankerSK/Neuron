@@ -34,7 +34,7 @@ public class DesignServiceImpl implements DesignService {
     @Override
     public String createTable(String tittle, String author) {
         Table table = Table.builder()
-                .tittle(tittle)
+                .title(tittle)
                 .author(author)
                 .build();
         Table ret = tableMapper.insert(table);
@@ -50,7 +50,7 @@ public class DesignServiceImpl implements DesignService {
             if (table.getStatus().equals(TableStatus.PUBLISHING)) {
                 throw new TableAlreadyPublishedException();
             }
-            table.setTittle(title);
+            table.setTitle(title);
             table.setUpdateDate(LocalDateTime.now());
             table.setQuestions(questions);
             table.setStatus(TableStatus.UNPUBLISH);
@@ -62,8 +62,12 @@ public class DesignServiceImpl implements DesignService {
     }
 
     @Override
-    public void releaseTable(String id, LocalDateTime beginning, LocalDateTime deadline, FillRule rule)
-            throws TableNotExistException, TableAlreadyPublishedException, TableAlreadyEndException {
+    public void releaseTable(
+            String id,
+            LocalDateTime beginning,
+            LocalDateTime deadline,
+            FillRule rule
+    ) throws TableNotExistException, TableAlreadyPublishedException, TableAlreadyEndException {
         Optional<Table> t = tableMapper.findById(id);
         if(t.isPresent()) {
             Table table = t.get();
@@ -75,8 +79,11 @@ public class DesignServiceImpl implements DesignService {
             tableMapper.save(table);
             ReleaseInfo info = ReleaseInfo.builder()
                     .tableId(id)
+                    .title(table.getTitle())
+                    .author(table.getAuthor())
                     .beginning(beginning)
                     .deadline(deadline)
+                    .fillRule(rule)
                     .build();
             releaseInfoMapper.insert(info);
         }
@@ -116,7 +123,7 @@ public class DesignServiceImpl implements DesignService {
             tableSummaryList.add(
                     AdminTableSummary.builder()
                             .id(table.getId())
-                            .tittle(table.getTittle())
+                            .title(table.getTitle())
                             .updateDate(table.getUpdateDate())
                             .status(table.getStatus())
                             .build()
