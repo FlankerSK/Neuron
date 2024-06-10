@@ -2,13 +2,11 @@ package com.practicum.neuron.serviceImpl;
 
 import com.practicum.neuron.entity.Answer;
 import com.practicum.neuron.entity.ReleaseInfo;
+import com.practicum.neuron.entity.SubmitInfo;
 import com.practicum.neuron.entity.table.Table;
 import com.practicum.neuron.entity.table.UserTableSummary;
 import com.practicum.neuron.exception.TableNotExistException;
-import com.practicum.neuron.mapper.AccountMapper;
-import com.practicum.neuron.mapper.AnswerMapper;
-import com.practicum.neuron.mapper.ReleaseInfoMapper;
-import com.practicum.neuron.mapper.TableMapper;
+import com.practicum.neuron.mapper.*;
 import com.practicum.neuron.service.FillService;
 import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
@@ -33,6 +31,9 @@ public class FillServiceImpl implements FillService {
 
     @Resource
     private AnswerMapper answerMapper;
+
+    @Resource
+    private SubmitInfoMapper submitInfoMapper;
 
     @Override
     public List<UserTableSummary> getTableSummary(String username) {
@@ -72,10 +73,26 @@ public class FillServiceImpl implements FillService {
 
     @Override
     public void saveAnswer(String id, String respondent, List<Answer> answers) throws TableNotExistException {
-        // 先删除原来提交的答案
-        answerMapper.deleteAllByTableIdAndRespondent(id, respondent);
+        if(tableMapper.findById(id).isPresent()) {
+            // 先删除原来提交的答案
+            answerMapper.deleteAllByTableIdAndRespondent(id, respondent);
 
-        // 再将答案全部插入至数据库
-        answerMapper.insert(answers);
+            // 再将答案全部插入至数据库
+            answerMapper.insert(answers);
+        }
+        else {
+            throw new TableNotExistException();
+        }
+    }
+
+    @Override
+    public void submitAnswer(String id, String respondent, LocalDateTime date) {
+        submitInfoMapper.save(
+                SubmitInfo.builder()
+                        .tableId(id)
+                        .respondent(respondent)
+                        .date(date)
+                        .build()
+        );
     }
 }
