@@ -13,11 +13,9 @@ import java.time.LocalDateTime;
 @Builder
 @Document("submit_info")
 public class SubmitInfo {
-    @Id
-    private String id;
-
     // 表 id
-    @Indexed
+    @Id
+    @Indexed(unique = true)
     @Field("table_id")
     private String tableId;
 

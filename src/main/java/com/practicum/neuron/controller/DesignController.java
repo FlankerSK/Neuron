@@ -59,8 +59,7 @@ public class DesignController {
     }
 
     @PutMapping("/api/admin/table/{id}")
-    public ResponseEntity<ResponseBody> updateTable(@PathVariable String id, HttpServletRequest request)
-            throws IOException {
+    public ResponseEntity<ResponseBody> updateTable(@PathVariable String id, HttpServletRequest request) {
         try{
             JsonNode jsonNode = objectMapper.readTree(request.getInputStream());
             String title = jsonNode.get("title").asText();

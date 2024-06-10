@@ -20,7 +20,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PutMapping;
 
-import java.io.IOException;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -79,8 +80,7 @@ public class FillController {
     }
 
     @PutMapping("/api/user/table/{id}/answer")
-    public ResponseEntity<ResponseBody> saveAnswer(@PathVariable String id, HttpServletRequest request)
-            throws IOException {
+    public ResponseEntity<ResponseBody> saveAnswer(@PathVariable String id, HttpServletRequest request) {
         try {
             JsonNode jsonNode = objectMapper.readTree(request.getInputStream());
             String token = jwtUtil.getToken(request);
@@ -107,6 +107,37 @@ public class FillController {
         catch (NullPointerException e) {
             return new ResponseEntity<>(
                     new ResponseBody(Status.ACCESS_INVALID_PARAMETER),
+                    HttpStatus.BAD_REQUEST
+            );
+        }
+        catch (Exception e) {
+            Status status = new Status(Status.TABLE_UNKNOWN_ERROR.getCode(), e.getMessage());
+            return new ResponseEntity<>(new ResponseBody(status), HttpStatus.FORBIDDEN);
+        }
+    }
+
+    @PutMapping("/api/user/table/{id}/answer/submit")
+    public ResponseEntity<ResponseBody> submitAnswer(@PathVariable String id, HttpServletRequest request) {
+        try {
+            JsonNode jsonNode = objectMapper.readTree(request.getInputStream());
+            String token = jwtUtil.getToken(request);
+            String respondent = jwtUtil.getUserNameFromToken(token);
+            LocalDateTime date = LocalDateTime.parse(jsonNode.get("date").asText());
+            fillService.submitAnswer(id, respondent, date);
+            return new ResponseEntity<>(
+                    new ResponseBody(Status.SUCCESS),
+                    HttpStatus.OK
+            );
+        }
+        catch (NullPointerException e) {
+            return new ResponseEntity<>(
+                    new ResponseBody(Status.ACCESS_INVALID_PARAMETER),
+                    HttpStatus.BAD_REQUEST
+            );
+        }
+        catch (DateTimeParseException e) {
+            return new ResponseEntity<>(
+                    new ResponseBody(Status.TABLE_INVALID_TIME),
                     HttpStatus.BAD_REQUEST
             );
         }
