@@ -1,10 +1,12 @@
 package com.practicum.neuron.serviceImpl;
 
+import com.practicum.neuron.entity.Answer;
 import com.practicum.neuron.entity.ReleaseInfo;
 import com.practicum.neuron.entity.table.Table;
 import com.practicum.neuron.entity.table.UserTableSummary;
 import com.practicum.neuron.exception.TableNotExistException;
 import com.practicum.neuron.mapper.AccountMapper;
+import com.practicum.neuron.mapper.AnswerMapper;
 import com.practicum.neuron.mapper.ReleaseInfoMapper;
 import com.practicum.neuron.mapper.TableMapper;
 import com.practicum.neuron.service.FillService;
@@ -28,6 +30,9 @@ public class FillServiceImpl implements FillService {
 
     @Resource
     private AccountMapper accountMapper;
+
+    @Resource
+    private AnswerMapper answerMapper;
 
     @Override
     public List<UserTableSummary> getTableSummary(String username) {
@@ -63,5 +68,14 @@ public class FillServiceImpl implements FillService {
         else {
             throw new TableNotExistException();
         }
+    }
+
+    @Override
+    public void saveAnswer(String id, String respondent, List<Answer> answers) throws TableNotExistException {
+        // 先删除原来提交的答案
+        answerMapper.deleteAllByTableIdAndRespondent(id, respondent);
+
+        // 再将答案全部插入至数据库
+        answerMapper.insert(answers);
     }
 }

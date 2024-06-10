@@ -1,7 +1,6 @@
 package com.practicum.neuron.service;
 
 import com.practicum.neuron.entity.FillRule;
-import com.practicum.neuron.entity.question.Question;
 import com.practicum.neuron.entity.table.AdminTableSummary;
 import com.practicum.neuron.entity.table.Table;
 import com.practicum.neuron.exception.TableAlreadyEndException;
@@ -11,6 +10,7 @@ import com.practicum.neuron.exception.TableUnpublishException;
 import org.bson.Document;
 import org.springframework.stereotype.Service;
 
+import java.security.NoSuchAlgorithmException;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -34,13 +34,12 @@ public interface DesignService {
      *
      * @param id        采集表 id
      * @param title     采集表标题
-     * @param questions 问题列表, 实际的类型是 Question 及其子类
+     * @param questions 问题列表
      * @throws TableNotExistException         采集表不存在
      * @throws TableAlreadyPublishedException 采集表已发布
-     * @see Question
      */
     void updateQuestion(String id, String title, List<Document> questions)
-            throws TableNotExistException, TableAlreadyPublishedException;
+            throws TableNotExistException, TableAlreadyPublishedException, NoSuchAlgorithmException;
 
     /**
      * 发布表
@@ -65,7 +64,7 @@ public interface DesignService {
      * @throws TableUnpublishException  采集表未发布
      * @throws TableAlreadyEndException 采集任务已结束
      */
-    void stopRelease(String id) throws TableNotExistException, TableUnpublishException, TableAlreadyEndException, TableNotExistException;
+    void stopRelease(String id) throws TableNotExistException, TableUnpublishException, TableAlreadyEndException;
 
     /**
      * 删除表

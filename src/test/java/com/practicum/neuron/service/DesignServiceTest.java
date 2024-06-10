@@ -1,7 +1,7 @@
 package com.practicum.neuron.service;
 
 import com.practicum.neuron.entity.FillRule;
-import com.practicum.neuron.entity.question.QuestionType;
+import com.practicum.neuron.entity.QuestionType;
 import com.practicum.neuron.entity.table.AdminTableSummary;
 import com.practicum.neuron.entity.table.Table;
 import com.practicum.neuron.mapper.ReleaseInfoMapper;
@@ -54,30 +54,30 @@ class DesignServiceTest {
         String title = "updateTable-test-update";
         // 填空
         Document fillInQuestion = new Document();
-        fillInQuestion.put("type", QuestionType.FILL_IN);
+        fillInQuestion.put("type", QuestionType.FILL_IN.name());
         fillInQuestion.put("title", "q1");
 
         // 单选
         Document singleAnswerMultipleChoiceQuestion = new Document();
-        singleAnswerMultipleChoiceQuestion.put("type", QuestionType.SINGLE_ANSWER_MULTIPLE_CHOICE);
+        singleAnswerMultipleChoiceQuestion.put("type", QuestionType.SINGLE_ANSWER_MULTIPLE_CHOICE.name());
         singleAnswerMultipleChoiceQuestion.put("title", "q2");
         singleAnswerMultipleChoiceQuestion.put("options", Arrays.asList("option1", "option2"));
 
         // 多选
         Document multipleAnswerMultipleChoiceQuestion = new Document();
-        multipleAnswerMultipleChoiceQuestion.put("type", QuestionType.MULTIPLE_ANSWER_MULTIPLE_CHOICE);
+        multipleAnswerMultipleChoiceQuestion.put("type", QuestionType.MULTIPLE_ANSWER_MULTIPLE_CHOICE.name());
         multipleAnswerMultipleChoiceQuestion.put("title", "q3");
         multipleAnswerMultipleChoiceQuestion.put("options", Arrays.asList("option1", "option2"));
 
         // 列表
         Document listQuestion = new Document();
-        listQuestion.put("type", QuestionType.LIST_QUESTION);
+        listQuestion.put("type", QuestionType.LIST_QUESTION.name());
         listQuestion.put("title", "q4");
         listQuestion.put("row_heading_list", Arrays.asList("row1", "row2"));
 
         // 表格
         Document tableQuestion = new Document();
-        tableQuestion.put("type", QuestionType.TABLE_QUESTION);
+        tableQuestion.put("type", QuestionType.TABLE_QUESTION.name());
         tableQuestion.put("title", "q5");
         tableQuestion.put("row_heading_list", Arrays.asList("row1", "row2"));
         tableQuestion.put("column_heading_list", Arrays.asList("column1", "column2"));

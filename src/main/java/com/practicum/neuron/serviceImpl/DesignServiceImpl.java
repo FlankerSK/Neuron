@@ -17,8 +17,12 @@ import lombok.extern.slf4j.Slf4j;
 import org.bson.Document;
 import org.springframework.stereotype.Component;
 
+import java.nio.charset.StandardCharsets;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Base64;
 import java.util.List;
 import java.util.Optional;
 
@@ -43,7 +47,7 @@ public class DesignServiceImpl implements DesignService {
 
     @Override
     public void updateQuestion(String id, String title, List<Document> questions)
-            throws TableNotExistException, TableAlreadyPublishedException {
+            throws TableNotExistException, TableAlreadyPublishedException, NoSuchAlgorithmException {
         Optional<Table> t = tableMapper.findById(id);
         if(t.isPresent()) {
             Table table = t.get();
@@ -52,6 +56,13 @@ public class DesignServiceImpl implements DesignService {
             }
             table.setTitle(title);
             table.setUpdateDate(LocalDateTime.now());
+
+            //  给每个问题都提供一个数字指纹
+            for (Document question : questions) {
+                byte[] data = question.toJson().getBytes(StandardCharsets.UTF_8);
+                byte[] fingerprint = MessageDigest.getInstance("SHA-256").digest(data);
+                question.put("fingerprint", Base64.getEncoder().encodeToString(fingerprint));
+            }
             table.setQuestions(questions);
             table.setStatus(TableStatus.UNPUBLISH);
             tableMapper.save(table);
