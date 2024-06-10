@@ -1,6 +1,8 @@
 package com.practicum.neuron.controller;
 
+import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.practicum.neuron.entity.Answer;
 import com.practicum.neuron.entity.response.ResponseBody;
 import com.practicum.neuron.entity.response.Status;
 import com.practicum.neuron.entity.table.Table;
@@ -16,7 +18,10 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PutMapping;
 
+import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 @Controller
@@ -70,6 +75,44 @@ public class FillController {
                     new ResponseBody(Status.TABLE_NOT_EXIST),
                     HttpStatus.NOT_FOUND
             );
+        }
+    }
+
+    @PutMapping("/api/user/table/{id}/answer")
+    public ResponseEntity<ResponseBody> saveAnswer(@PathVariable String id, HttpServletRequest request)
+            throws IOException {
+        try {
+            JsonNode jsonNode = objectMapper.readTree(request.getInputStream());
+            String token = jwtUtil.getToken(request);
+            String respondent = jwtUtil.getUserNameFromToken(token);
+            JsonNode answerListNode = jsonNode.get("answers");
+            List<Answer> answerList = new ArrayList<>();
+            for (JsonNode answerNode : answerListNode) {
+                String fingerprint = answerNode.get("fingerprint").asText();
+                String[] answers = objectMapper.treeToValue(answerNode.get("answers"), String[].class);
+                answerList.add(Answer.builder()
+                        .tableId(id)
+                        .respondent(respondent)
+                        .fingerprint(fingerprint)
+                        .answers(answers)
+                        .build()
+                );
+            }
+            fillService.saveAnswer(id, respondent, answerList);
+            return new ResponseEntity<>(
+                    new ResponseBody(Status.SUCCESS),
+                    HttpStatus.OK
+            );
+        }
+        catch (NullPointerException e) {
+            return new ResponseEntity<>(
+                    new ResponseBody(Status.ACCESS_INVALID_PARAMETER),
+                    HttpStatus.BAD_REQUEST
+            );
+        }
+        catch (Exception e) {
+            Status status = new Status(Status.TABLE_UNKNOWN_ERROR.getCode(), e.getMessage());
+            return new ResponseEntity<>(new ResponseBody(status), HttpStatus.FORBIDDEN);
         }
     }
 }

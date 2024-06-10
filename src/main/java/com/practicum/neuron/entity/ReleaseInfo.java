@@ -17,7 +17,7 @@ public class ReleaseInfo {
     @Id
     private String id;
 
-    // 表 tableId
+    // 表 id
     @Indexed
     @Field("table_id")
     private String tableId;

@@ -1,5 +1,6 @@
 package com.practicum.neuron.service;
 
+import com.practicum.neuron.entity.Answer;
 import com.practicum.neuron.entity.table.Table;
 import com.practicum.neuron.entity.table.UserTableSummary;
 import com.practicum.neuron.exception.TableNotExistException;
@@ -25,4 +26,14 @@ public interface FillService {
      * @throws TableNotExistException   采集表不存在
      */
     Table getTable(String id) throws TableNotExistException;
+
+    /**
+     * 保存指定 id 的采集表的用户填写数据
+     *
+     * @param id 表 id
+     * @param respondent 回答者
+     * @param answers 答案列表
+     * @throws TableNotExistException   采集表不存在
+     */
+    void saveAnswer(String id, String respondent, List<Answer> answers) throws TableNotExistException;
 }

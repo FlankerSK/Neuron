@@ -61,19 +61,25 @@ public class DesignController {
     @PutMapping("/api/admin/table/{id}")
     public ResponseEntity<ResponseBody> updateTable(@PathVariable String id, HttpServletRequest request)
             throws IOException {
-        JsonNode jsonNode = objectMapper.readTree(request.getInputStream());
-        String title = jsonNode.get("title").asText();
-        JsonNode questionListNode = jsonNode.get("questions");
-        ArrayList<Document> questions = new ArrayList<>();
-        for (JsonNode questionNode : questionListNode) {
-            Document question = objectMapper.treeToValue(questionNode, Document.class);
-            questions.add(question);
-        }
         try{
+            JsonNode jsonNode = objectMapper.readTree(request.getInputStream());
+            String title = jsonNode.get("title").asText();
+            JsonNode questionListNode = jsonNode.get("questions");
+            ArrayList<Document> questions = new ArrayList<>();
+            for (JsonNode questionNode : questionListNode) {
+                Document question = objectMapper.treeToValue(questionNode, Document.class);
+                questions.add(question);
+            }
             designService.updateQuestion(id, title, questions);
             return new ResponseEntity<>(
                     new ResponseBody(Status.SUCCESS),
                     HttpStatus.OK
+            );
+        }
+        catch(NullPointerException e) {
+            return new ResponseEntity<>(
+                    new ResponseBody(Status.ACCESS_INVALID_PARAMETER),
+                    HttpStatus.BAD_REQUEST
             );
         }
         catch(TableNotExistException e) {

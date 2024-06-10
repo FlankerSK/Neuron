@@ -1,11 +1,11 @@
 package com.practicum.neuron.handler;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.practicum.neuron.entity.response.ResponseBody;
 import com.practicum.neuron.entity.response.Status;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -16,19 +16,17 @@ import org.springframework.web.servlet.resource.NoResourceFoundException;
 public class GlobalExceptionHandler {
     @ExceptionHandler(NoResourceFoundException.class)
     @org.springframework.web.bind.annotation.ResponseBody
-    public org.springframework.http.ResponseEntity<String> handleNoResourceFoundException(NoResourceFoundException e)
-            throws JsonProcessingException {
-        String body = new ResponseBody(Status.ACCESS_NOT_FOUND).toJson();
+    public ResponseEntity<ResponseBody> handleNoResourceFoundException(NoResourceFoundException e) {
+        ResponseBody body = new ResponseBody(Status.ACCESS_NOT_FOUND);
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
-        return new org.springframework.http.ResponseEntity<>(body, headers, HttpStatus.NOT_FOUND);
+        return new ResponseEntity<>(body, headers, HttpStatus.NOT_FOUND);
     }
 
     @ExceptionHandler(NoHandlerFoundException.class)
     @org.springframework.web.bind.annotation.ResponseBody
-    public org.springframework.http.ResponseEntity<String> handleNoHandlerFoundException(NoHandlerFoundException e)
-            throws JsonProcessingException {
-        String body = new ResponseBody(Status.ACCESS_NOT_FOUND).toJson();
+    public ResponseEntity<ResponseBody> handleNoHandlerFoundException(NoHandlerFoundException e) {
+        ResponseBody body = new ResponseBody(Status.ACCESS_NOT_FOUND);
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
         return new org.springframework.http.ResponseEntity<>(body, headers, HttpStatus.NOT_FOUND);
@@ -36,10 +34,8 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(HttpRequestMethodNotSupportedException.class)
     @org.springframework.web.bind.annotation.ResponseBody
-    public org.springframework.http.ResponseEntity<String> handleHttpRequestMethodNotSupportedException(
-            HttpRequestMethodNotSupportedException e
-    ) throws JsonProcessingException {
-        String body = new ResponseBody(Status.ACCESS_METHOD_NOT_ALLOWED).toJson();
+    public ResponseEntity<ResponseBody> handleHttpRequestMethodNotSupportedException(HttpRequestMethodNotSupportedException e) {
+        ResponseBody body = new ResponseBody(Status.ACCESS_METHOD_NOT_ALLOWED);
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
         return new org.springframework.http.ResponseEntity<>(body, headers, HttpStatus.METHOD_NOT_ALLOWED);

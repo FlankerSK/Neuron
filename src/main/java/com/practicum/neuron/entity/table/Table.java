@@ -16,7 +16,7 @@ import java.util.List;
 @Builder
 @Document("tables")
 public class Table {
-    // tableId
+    // 表 id
     @Id
     private String id;
 

@@ -1,4 +1,4 @@
-package com.practicum.neuron.entity.question;
+package com.practicum.neuron.entity;
 
 public enum QuestionType {
     // 填空
