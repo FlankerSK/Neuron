@@ -4,20 +4,17 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.practicum.neuron.entity.account.SecurityInfo;
 import com.practicum.neuron.entity.account.User;
-import com.practicum.neuron.entity.response.ResponseBody;
+import com.practicum.neuron.entity.response.RespondBody;
 import com.practicum.neuron.entity.response.Status;
-import com.practicum.neuron.exception.UserExistException;
 import com.practicum.neuron.service.AccountService;
 import jakarta.annotation.Resource;
 import jakarta.servlet.http.HttpServletRequest;
+import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
-
-import java.io.IOException;
 
 /**
  * 账户系统控制器
@@ -34,9 +31,10 @@ public class AccountController {
     @Resource
     private AccountService accountService;
 
+    @SneakyThrows
     @PostMapping("/api/account/register")
-    public ResponseEntity<ResponseBody> register(HttpServletRequest request)
-            throws IOException {
+    @ResponseBody
+    public RespondBody register(HttpServletRequest request) {
         JsonNode jsonNode = objectMapper.readTree(request.getInputStream());
         String username = jsonNode.get("username").asText();
         String password = jsonNode.get("password").asText();
@@ -48,24 +46,7 @@ public class AccountController {
         SecurityInfo info = SecurityInfo.builder()
                 .email(email)
                 .build();
-        try {
-            accountService.register(user, info);
-            return new ResponseEntity<>(
-                    new ResponseBody(Status.SUCCESS),
-                    HttpStatus.OK
-            );
-        }
-        catch (UserExistException e) {
-            return new ResponseEntity<>(
-                    new ResponseBody(Status.REGISTER_USER_EXIST),
-                    HttpStatus.FORBIDDEN
-            );
-        }
-        catch (Exception e) {
-            return new ResponseEntity<>(
-                    new ResponseBody(Status.REGISTER_UNKNOWN_ERROR),
-                    HttpStatus.FORBIDDEN
-            );
-        }
+        accountService.register(user, info);
+        return new RespondBody(Status.SUCCESS);
     }
 }

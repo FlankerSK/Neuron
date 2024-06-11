@@ -1,20 +1,20 @@
 package com.practicum.neuron.controller;
 
-import com.practicum.neuron.entity.response.ResponseBody;
+import com.practicum.neuron.entity.response.RespondBody;
 import com.practicum.neuron.entity.response.Status;
 import com.practicum.neuron.utils.JwtUtil;
 import jakarta.annotation.Resource;
 import jakarta.servlet.http.HttpServletRequest;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 
 /**
  * Jwt Token 认证控制器
  */
-@Controller
+@RestController
+@RequestMapping("/api/token")
 public class JwtController {
     @Resource
     JwtUtil jwtUtil;
@@ -25,12 +25,11 @@ public class JwtController {
      * @param request HTTP请求
      * @return 新的 accessToken
      */
-    @PostMapping("/api/refresh/access-token")
-    public ResponseEntity<ResponseBody> refreshAccessToken(HttpServletRequest request) {
+    @PostMapping("/access-token")
+    public RespondBody refreshAccessToken(HttpServletRequest request) {
         String token = jwtUtil.getToken(request);
         String username = jwtUtil.getUserNameFromToken(token);
-        ResponseBody data = new ResponseBody(Status.SUCCESS, jwtUtil.createAccessToken(username));
-        return new ResponseEntity<>(data, HttpStatus.OK);
+        return new RespondBody(Status.SUCCESS, jwtUtil.createAccessToken(username));
     }
 
     /**
@@ -39,13 +38,12 @@ public class JwtController {
      * @param request HTTP请求
      * @return 新的 refreshToken
      */
-    @PostMapping("/api/refresh/refresh-token")
-    public ResponseEntity<ResponseBody> refreshRefreshToken(HttpServletRequest request) {
+    @PostMapping("/refresh-token")
+    public RespondBody refreshRefreshToken(HttpServletRequest request) {
         String token = jwtUtil.getToken(request);
         String username = jwtUtil.getUserNameFromToken(token);
-        ResponseBody data = new ResponseBody(Status.SUCCESS, jwtUtil.createAccessToken(username));
         // 注销令牌
         jwtUtil.blockToken(token, token, username);
-        return new ResponseEntity<>(data, HttpStatus.OK);
+        return new RespondBody(Status.SUCCESS, jwtUtil.createAccessToken(username));
     }
 }

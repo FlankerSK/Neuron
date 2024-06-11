@@ -1,6 +1,6 @@
 package com.practicum.neuron.handler;
 
-import com.practicum.neuron.entity.response.ResponseBody;
+import com.practicum.neuron.entity.response.RespondBody;
 import com.practicum.neuron.entity.response.Status;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -22,7 +22,7 @@ public class SecurityAuthenticationEntryPoint implements AuthenticationEntryPoin
     ) throws IOException {
         response.setContentType("text/json;charset=utf-8");
         response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-        response.getWriter().write(new ResponseBody(Status.ACCESS_NEED_LOGIN).toJson());
+        response.getWriter().write(new RespondBody(Status.ACCESS_NEED_LOGIN).toJson());
         response.getWriter().flush();
     }
 }
