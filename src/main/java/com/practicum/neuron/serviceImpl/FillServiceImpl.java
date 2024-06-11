@@ -4,6 +4,7 @@ import com.practicum.neuron.entity.QuestionAnswer;
 import com.practicum.neuron.entity.ReleaseInfo;
 import com.practicum.neuron.entity.SubmitInfo;
 import com.practicum.neuron.entity.answer.Answer;
+import com.practicum.neuron.entity.answer.LastAnswer;
 import com.practicum.neuron.entity.table.Table;
 import com.practicum.neuron.entity.table.UserTableAnswer;
 import com.practicum.neuron.entity.table.UserTableSummary;
@@ -38,6 +39,9 @@ public class FillServiceImpl implements FillService {
 
     @Resource
     private SubmitInfoMapper submitInfoMapper;
+
+    @Resource
+    private LastAnswerMapper lastAnswerMapper;
 
     @Override
     public List<UserTableSummary> getTableSummary(String username) {
@@ -80,9 +84,18 @@ public class FillServiceImpl implements FillService {
         if(tableMapper.findById(id).isPresent()) {
             // 先删除原来提交的答案
             answerMapper.deleteAllByTableIdAndRespondent(id, respondent);
-
             // 再将答案全部插入至数据库
             answerMapper.insert(answers);
+            // 修改对应问题的上次填写内容
+            List<LastAnswer> lastAnswers = new ArrayList<>();
+            for (Answer answer : answers) {
+                String[] answerList = answer.getAnswers();
+                if(answer.getAnswers().length != 0) {
+                    String fingerprint = answer.getFingerprint();
+                    lastAnswers.add(new LastAnswer(fingerprint, respondent, answerList));
+                }
+            }
+            lastAnswerMapper.saveAll(lastAnswers);
         }
         else {
             throw new TableNotExistException();
@@ -131,7 +144,14 @@ public class FillServiceImpl implements FillService {
                     questionAnswer.add(new QuestionAnswer(question, answers.get().getAnswers()));
                 }
                 else {
-                    questionAnswer.add(new QuestionAnswer(question, new String[]{}));
+                    // 如果数据为空，则从上次填写的数据中寻找对应的（即问题的数字指纹相同的）数据自动填入
+                    Optional<LastAnswer> last = lastAnswerMapper.findByFingerprintAndRespondent(fingerprint, respondent);
+                    if (last.isPresent()) {
+                        questionAnswer.add(new QuestionAnswer(question, last.get().getAnswers()));
+                    }
+                    else {
+                        questionAnswer.add(new QuestionAnswer(question, new String[]{}));
+                    }
                 }
             }
             return UserTableAnswer.builder()
