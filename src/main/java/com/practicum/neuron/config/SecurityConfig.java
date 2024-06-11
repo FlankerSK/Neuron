@@ -84,8 +84,8 @@ public class SecurityConfig {
                 //设置权限
                 .authorizeHttpRequests(
                         auth -> auth
-                                // /api/refresh/** (刷新 token) 与登出操作需要认证
-                                .requestMatchers("/api/refresh/**", logoutUrl).authenticated()
+                                // /api/token/** (刷新 token) 与登出操作需要认证
+                                .requestMatchers("/api/token/**", logoutUrl).authenticated()
                                 // /api/admin/ 下是管理员用户的资源区域
                                 .requestMatchers("/api/admin/**").hasRole("ADMIN")
                                 // /api/user/ 下是普通用户的资源区域

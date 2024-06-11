@@ -19,6 +19,8 @@ spring:
     redis:
       host: localhost
       port: 6379
+      repositories:
+        enabled: false
 
 jwt:
   # JWT 存储的请求头

@@ -1,7 +1,7 @@
 package com.practicum.neuron.controller;
 
 import com.practicum.neuron.entity.answer.AnswerSummary;
-import com.practicum.neuron.entity.response.ResponseBody;
+import com.practicum.neuron.entity.response.RespondBody;
 import com.practicum.neuron.entity.response.Status;
 import com.practicum.neuron.entity.table.TableAnswer;
 import com.practicum.neuron.exception.AnswerNotExistException;
@@ -24,40 +24,40 @@ public class CollectionController {
     private CollectionService collectionService;
 
     @GetMapping("/table/{id}/answer")
-    public ResponseEntity<ResponseBody> getAnswers(@PathVariable String id) {
+    public ResponseEntity<RespondBody> getAnswers(@PathVariable String id) {
         List<AnswerSummary> list = collectionService.getAnswerList(id);
         return new ResponseEntity<>(
-                new ResponseBody(Status.SUCCESS, list),
+                new RespondBody(Status.SUCCESS, list),
                 HttpStatus.OK
         );
     }
 
     @GetMapping("/table/{tableId}/answer/{AnswerId}")
-    public ResponseEntity<ResponseBody> getAnswers(
+    public ResponseEntity<RespondBody> getAnswers(
             @PathVariable String tableId,
             @PathVariable String AnswerId
     ) {
         try{
             TableAnswer tableAnswer = collectionService.getOneTableUserAnswer(tableId, AnswerId);
             return new ResponseEntity<>(
-                    new ResponseBody(Status.SUCCESS, tableAnswer),
+                    new RespondBody(Status.SUCCESS, tableAnswer),
                     HttpStatus.OK
             );
         }
         catch (TableNotExistException e) {
             return new ResponseEntity<>(
-                    new ResponseBody(Status.TABLE_NOT_EXIST),
+                    new RespondBody(Status.TABLE_NOT_EXIST),
                     HttpStatus.NOT_FOUND
             );
         }
         catch (AnswerNotExistException e) {
             return new ResponseEntity<>(
-                    new ResponseBody(Status.DATA_NOT_EXIST),
+                    new RespondBody(Status.DATA_NOT_EXIST),
                     HttpStatus.NOT_FOUND
             );
         }
         catch (Exception e) {
-            ResponseBody body = new ResponseBody(Status.ACCESS_UNKNOWN_ERROR);
+            RespondBody body = new RespondBody(Status.ACCESS_UNKNOWN_ERROR);
             body.setMessage(e.getMessage());
             return new ResponseEntity<>(body, HttpStatus.FORBIDDEN);
         }
