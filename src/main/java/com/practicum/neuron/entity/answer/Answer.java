@@ -1,4 +1,4 @@
-package com.practicum.neuron.entity;
+package com.practicum.neuron.entity.answer;
 
 import lombok.Builder;
 import lombok.Data;

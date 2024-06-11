@@ -2,7 +2,7 @@ package com.practicum.neuron.controller;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.practicum.neuron.entity.Answer;
+import com.practicum.neuron.entity.answer.Answer;
 import com.practicum.neuron.entity.response.ResponseBody;
 import com.practicum.neuron.entity.response.Status;
 import com.practicum.neuron.entity.table.Table;

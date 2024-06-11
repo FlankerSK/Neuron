@@ -1,6 +1,6 @@
 package com.practicum.neuron.service;
 
-import com.practicum.neuron.entity.Answer;
+import com.practicum.neuron.entity.answer.Answer;
 import com.practicum.neuron.entity.table.Table;
 import com.practicum.neuron.entity.table.UserTableSummary;
 import com.practicum.neuron.exception.TableNotExistException;
@@ -9,16 +9,13 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDateTime;
 import java.util.List;
 
-/**
- * The interface Fill service.
- */
 @Service
 public interface FillService {
     /**
      * 根据用户名查找此用户所有可以填写的采集表，只返回每个表的简要信息
      *
      * @param username 用户名
-     * @return 采集表简要信息 table summary
+     * @return 采集表简要信息
      */
     List<UserTableSummary> getTableSummary(String username);
 
