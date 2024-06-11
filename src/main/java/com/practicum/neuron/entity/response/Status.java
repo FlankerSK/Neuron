@@ -60,4 +60,8 @@ public class Status {
     public final static Status TABLE_ALREADY_PUBLISHED = new Status(4003, "数据采集表已发布");
     public final static Status TABLE_ALREADY_END = new Status(4004, "数据采集表已结束收集");
     public final static Status TABLE_INVALID_TIME = new Status(4005, "无效的时间参数");
+
+    /* 5XXX 采集数据错误 */
+    public final static Status DATA_UNKNOWN_ERROR = new Status(5000, "未知采集数据错误");
+    public final static Status DATA_NOT_EXIST = new Status(4001, "采集数据不存在");
 }

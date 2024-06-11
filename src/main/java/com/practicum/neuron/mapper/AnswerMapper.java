@@ -1,7 +1,9 @@
 package com.practicum.neuron.mapper;
 
-import com.practicum.neuron.entity.Answer;
+import com.practicum.neuron.entity.answer.Answer;
 import org.springframework.data.mongodb.repository.MongoRepository;
+
+import java.util.Optional;
 
 /**
  * The interface Answer mapper.
@@ -14,4 +16,10 @@ public interface AnswerMapper extends MongoRepository<Answer, String> {
      * @param respondent the respondent
      */
     void deleteAllByTableIdAndRespondent(String tableId, String respondent);
+
+    Optional<Answer> findByTableIdAndRespondentAndFingerprint(
+            String tableId,
+            String respondent,
+            String fingerprint
+    );
 }

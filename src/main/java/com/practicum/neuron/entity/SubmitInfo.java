@@ -3,7 +3,6 @@ package com.practicum.neuron.entity;
 import lombok.Builder;
 import lombok.Data;
 import org.springframework.data.annotation.Id;
-import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
 
@@ -13,9 +12,10 @@ import java.time.LocalDateTime;
 @Builder
 @Document("submit_info")
 public class SubmitInfo {
-    // 表 id
     @Id
-    @Indexed(unique = true)
+    private String id;
+
+    // 表 id
     @Field("table_id")
     private String tableId;
 

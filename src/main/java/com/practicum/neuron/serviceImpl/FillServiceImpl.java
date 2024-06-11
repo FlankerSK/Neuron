@@ -1,8 +1,8 @@
 package com.practicum.neuron.serviceImpl;
 
-import com.practicum.neuron.entity.Answer;
 import com.practicum.neuron.entity.ReleaseInfo;
 import com.practicum.neuron.entity.SubmitInfo;
+import com.practicum.neuron.entity.answer.Answer;
 import com.practicum.neuron.entity.table.Table;
 import com.practicum.neuron.entity.table.UserTableSummary;
 import com.practicum.neuron.exception.TableNotExistException;
@@ -87,12 +87,24 @@ public class FillServiceImpl implements FillService {
 
     @Override
     public void submitAnswer(String id, String respondent, LocalDateTime date) {
-        submitInfoMapper.save(
-                SubmitInfo.builder()
-                        .tableId(id)
-                        .respondent(respondent)
-                        .date(date)
-                        .build()
-        );
+        Optional<SubmitInfo> s = submitInfoMapper.findByTableIdAndRespondent(id, respondent);
+        // 如果表已经存在，就修改数据
+        if(s.isPresent()) {
+            SubmitInfo submitInfo = s.get();
+            submitInfo.setTableId(id);
+            submitInfo.setRespondent(respondent);
+            submitInfo.setDate(date);
+            submitInfoMapper.save(submitInfo);
+        }
+        // 否则插入新数据
+        else {
+            submitInfoMapper.insert(
+                    SubmitInfo.builder()
+                            .tableId(id)
+                            .respondent(respondent)
+                            .date(date)
+                            .build()
+            );
+        }
     }
 }
