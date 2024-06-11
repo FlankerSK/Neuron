@@ -3,6 +3,7 @@ package com.practicum.neuron.entity;
 import lombok.Builder;
 import lombok.Builder.Default;
 import lombok.Data;
+import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
@@ -13,6 +14,10 @@ import java.time.LocalDateTime;
 @Builder
 @Document("release_info")
 public class ReleaseInfo {
+    // id
+    @Id
+    private String id;
+
     // 表 id
     @Indexed
     @Field("table_id")
