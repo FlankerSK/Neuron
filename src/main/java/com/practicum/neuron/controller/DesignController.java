@@ -105,4 +105,11 @@ public class DesignController {
         Table table = designService.getTable(id);
         return new RespondBody(Status.SUCCESS, table);
     }
+
+    @SneakyThrows
+    @DeleteMapping("/table/{id}")
+    public RespondBody deleteTable(@PathVariable String id) {
+        designService.deleteTable(id);
+        return new RespondBody(Status.SUCCESS);
+    }
 }

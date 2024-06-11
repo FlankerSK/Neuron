@@ -133,6 +133,18 @@ class DesignServiceTest {
     @Test
     @Order(5)
     void deleteTable() {
+        String id = designService.createTable("deleteTable-test", "test");
+
+        try {
+            LocalDateTime beginning = LocalDateTime.parse("2024-06-08T00:00:00");
+            LocalDateTime deadline = LocalDateTime.parse("9999-12-30T23:00:00");
+            FillRule rule = new FillRule();
+            designService.releaseTable(id, beginning, deadline, rule);
+            designService.deleteTable(id);
+        }
+        catch (Exception e) {
+            Assert.isTrue(false, e.getMessage());
+        }
     }
 
     @Test
