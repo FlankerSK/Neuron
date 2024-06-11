@@ -1,15 +1,19 @@
 package com.practicum.neuron.serviceImpl;
 
+import com.practicum.neuron.entity.QuestionAnswer;
 import com.practicum.neuron.entity.ReleaseInfo;
 import com.practicum.neuron.entity.SubmitInfo;
 import com.practicum.neuron.entity.answer.Answer;
 import com.practicum.neuron.entity.table.Table;
+import com.practicum.neuron.entity.table.UserTableAnswer;
 import com.practicum.neuron.entity.table.UserTableSummary;
 import com.practicum.neuron.exception.TableNotExistException;
 import com.practicum.neuron.mapper.*;
 import com.practicum.neuron.service.FillService;
 import jakarta.annotation.Resource;
+import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
+import org.bson.Document;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDateTime;
@@ -105,6 +109,38 @@ public class FillServiceImpl implements FillService {
                             .date(date)
                             .build()
             );
+        }
+    }
+
+    @SneakyThrows
+    @Override
+    public UserTableAnswer getTableAnswer(String id, String respondent) {
+        Optional<Table> t = tableMapper.findById(id);
+        if (t.isPresent()) {
+            Table table = t.get();
+            List<Document> questions = table.getQuestions();
+            List<QuestionAnswer> questionAnswer = new ArrayList<>();
+            for (Document question : questions) {
+                String fingerprint = question.getString("fingerprint");
+                Optional<Answer> answers = answerMapper.findByTableIdAndRespondentAndFingerprint(
+                        id,
+                        respondent,
+                        fingerprint
+                );
+                if (answers.isPresent()) {
+                    questionAnswer.add(new QuestionAnswer(question, answers.get().getAnswers()));
+                }
+                else {
+                    questionAnswer.add(new QuestionAnswer(question, new String[]{}));
+                }
+            }
+            return UserTableAnswer.builder()
+                    .title(table.getTitle())
+                    .questionAnswers(questionAnswer)
+                    .build();
+        }
+        else {
+            throw new TableNotExistException();
         }
     }
 }

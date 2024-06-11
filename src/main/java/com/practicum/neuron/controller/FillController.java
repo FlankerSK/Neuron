@@ -5,11 +5,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.practicum.neuron.entity.answer.Answer;
 import com.practicum.neuron.entity.response.RespondBody;
 import com.practicum.neuron.entity.response.Status;
-import com.practicum.neuron.entity.table.Table;
-import com.practicum.neuron.entity.table.TableStatus;
+import com.practicum.neuron.entity.table.UserTableAnswer;
 import com.practicum.neuron.entity.table.UserTableSummary;
-import com.practicum.neuron.exception.TableAlreadyEndException;
-import com.practicum.neuron.exception.TableUnpublishException;
 import com.practicum.neuron.service.FillService;
 import com.practicum.neuron.utils.JwtUtil;
 import jakarta.annotation.Resource;
@@ -48,18 +45,6 @@ public class FillController {
     }
 
     @SneakyThrows
-    @GetMapping("/table/{id}")
-    public RespondBody getTable(@PathVariable String id) {
-        Table table = fillService.getTable(id);
-        TableStatus status = table.getStatus();
-        switch (status) {
-            case UNPUBLISH -> throw new TableUnpublishException();
-            case END -> throw new TableAlreadyEndException();
-        }
-        return new RespondBody(Status.SUCCESS, table);
-    }
-
-    @SneakyThrows
     @PutMapping("/table/{id}/answer")
     public RespondBody saveAnswer(@PathVariable String id, HttpServletRequest request) {
         JsonNode jsonNode = objectMapper.readTree(request.getInputStream());
@@ -91,5 +76,14 @@ public class FillController {
         LocalDateTime date = LocalDateTime.parse(jsonNode.get("date").asText());
         fillService.submitAnswer(id, respondent, date);
         return new RespondBody(Status.SUCCESS);
+    }
+
+    @SneakyThrows
+    @GetMapping("/table/{id}/answer")
+    public RespondBody getTableAnswer(@PathVariable String id, HttpServletRequest request) {
+        String token = jwtUtil.getToken(request);
+        String respondent = jwtUtil.getUserNameFromToken(token);
+        UserTableAnswer tableAnswer = fillService.getTableAnswer(id, respondent);
+        return new RespondBody(Status.SUCCESS, tableAnswer);
     }
 }

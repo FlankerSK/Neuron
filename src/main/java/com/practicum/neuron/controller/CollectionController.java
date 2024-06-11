@@ -3,63 +3,34 @@ package com.practicum.neuron.controller;
 import com.practicum.neuron.entity.answer.AnswerSummary;
 import com.practicum.neuron.entity.response.RespondBody;
 import com.practicum.neuron.entity.response.Status;
-import com.practicum.neuron.entity.table.TableAnswer;
-import com.practicum.neuron.exception.AnswerNotExistException;
-import com.practicum.neuron.exception.TableNotExistException;
+import com.practicum.neuron.entity.table.AdminTableAnswer;
 import com.practicum.neuron.service.CollectionService;
 import jakarta.annotation.Resource;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
+import lombok.SneakyThrows;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
-@Controller
+@RestController
 @RequestMapping("/api/admin")
 public class CollectionController {
     @Resource
     private CollectionService collectionService;
 
+    @SneakyThrows
     @GetMapping("/table/{id}/answer")
-    public ResponseEntity<RespondBody> getAnswers(@PathVariable String id) {
+    public RespondBody getAnswers(@PathVariable String id) {
         List<AnswerSummary> list = collectionService.getAnswerList(id);
-        return new ResponseEntity<>(
-                new RespondBody(Status.SUCCESS, list),
-                HttpStatus.OK
-        );
+        return new RespondBody(Status.SUCCESS, list);
     }
 
+    @SneakyThrows
     @GetMapping("/table/{tableId}/answer/{AnswerId}")
-    public ResponseEntity<RespondBody> getAnswers(
-            @PathVariable String tableId,
-            @PathVariable String AnswerId
-    ) {
-        try{
-            TableAnswer tableAnswer = collectionService.getOneTableUserAnswer(tableId, AnswerId);
-            return new ResponseEntity<>(
-                    new RespondBody(Status.SUCCESS, tableAnswer),
-                    HttpStatus.OK
-            );
-        }
-        catch (TableNotExistException e) {
-            return new ResponseEntity<>(
-                    new RespondBody(Status.TABLE_NOT_EXIST),
-                    HttpStatus.NOT_FOUND
-            );
-        }
-        catch (AnswerNotExistException e) {
-            return new ResponseEntity<>(
-                    new RespondBody(Status.DATA_NOT_EXIST),
-                    HttpStatus.NOT_FOUND
-            );
-        }
-        catch (Exception e) {
-            RespondBody body = new RespondBody(Status.ACCESS_UNKNOWN_ERROR);
-            body.setMessage(e.getMessage());
-            return new ResponseEntity<>(body, HttpStatus.FORBIDDEN);
-        }
+    public RespondBody getAnswers(@PathVariable String tableId, @PathVariable String AnswerId) {
+        AdminTableAnswer tableAnswer = collectionService.getOneTableUserAnswer(tableId, AnswerId);
+        return new RespondBody(Status.SUCCESS, tableAnswer);
     }
 }
