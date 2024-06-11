@@ -9,12 +9,15 @@ import com.practicum.neuron.exception.TableAlreadyEndException;
 import com.practicum.neuron.exception.TableAlreadyPublishedException;
 import com.practicum.neuron.exception.TableNotExistException;
 import com.practicum.neuron.exception.TableUnpublishException;
+import com.practicum.neuron.mapper.AnswerMapper;
 import com.practicum.neuron.mapper.ReleaseInfoMapper;
+import com.practicum.neuron.mapper.SubmitInfoMapper;
 import com.practicum.neuron.mapper.TableMapper;
 import com.practicum.neuron.service.DesignService;
 import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
 import org.bson.Document;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
@@ -38,6 +41,10 @@ public class DesignServiceImpl implements DesignService {
 
     @Resource
     private ReleaseInfoMapper releaseInfoMapper;
+    @Autowired
+    private SubmitInfoMapper submitInfoMapper;
+    @Autowired
+    private AnswerMapper answerMapper;
 
     @Override
     public String createTable(String tittle, String author) {
@@ -127,7 +134,11 @@ public class DesignServiceImpl implements DesignService {
 
     @Override
     public void deleteTable(String id) throws TableNotExistException {
-
+        // 删除所有库中有对应 id 的数据
+        tableMapper.deleteById(id);
+        submitInfoMapper.deleteById(id);
+        answerMapper.deleteAllByTableId(id);
+        releaseInfoMapper.deleteByTableId(id);
     }
 
     @Override
