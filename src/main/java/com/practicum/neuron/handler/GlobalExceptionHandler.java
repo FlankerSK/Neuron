@@ -67,4 +67,10 @@ public class GlobalExceptionHandler {
         RespondBody body = new RespondBody(Status.ACCESS_INVALID_PARAMETER);
         return new ResponseEntity<>(body, HttpStatus.BAD_REQUEST);
     }
+
+    @ExceptionHandler(AnswerNotExistException.class)
+    public ResponseEntity<RespondBody> handleAnswerNotExistException() {
+        RespondBody body = new RespondBody(Status.DATA_NOT_EXIST);
+        return new ResponseEntity<>(body, HttpStatus.FORBIDDEN);
+    }
 }

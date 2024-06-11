@@ -3,8 +3,8 @@ package com.practicum.neuron.service;
 import com.practicum.neuron.entity.QuestionType;
 import com.practicum.neuron.entity.answer.Answer;
 import com.practicum.neuron.entity.answer.AnswerSummary;
+import com.practicum.neuron.entity.table.AdminTableAnswer;
 import com.practicum.neuron.entity.table.Table;
-import com.practicum.neuron.entity.table.TableAnswer;
 import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
 import org.bson.Document;
@@ -122,7 +122,7 @@ class CollectionServiceTest {
             fillService.submitAnswer(id, "test2", LocalDateTime.now());
             List<AnswerSummary> answers = collectionService.getAnswerList(id);
             String answerId = answers.get(0).getAnswerId();
-            TableAnswer tableAnswer =  collectionService.getOneTableUserAnswer(id, answerId);
+            AdminTableAnswer tableAnswer =  collectionService.getOneTableUserAnswer(id, answerId);
             log.info(tableAnswer.toString());
         }
         catch (Exception e) {

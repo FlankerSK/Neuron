@@ -4,8 +4,8 @@ import com.practicum.neuron.entity.QuestionAnswer;
 import com.practicum.neuron.entity.SubmitInfo;
 import com.practicum.neuron.entity.answer.Answer;
 import com.practicum.neuron.entity.answer.AnswerSummary;
+import com.practicum.neuron.entity.table.AdminTableAnswer;
 import com.practicum.neuron.entity.table.Table;
-import com.practicum.neuron.entity.table.TableAnswer;
 import com.practicum.neuron.exception.AnswerNotExistException;
 import com.practicum.neuron.exception.TableNotExistException;
 import com.practicum.neuron.mapper.AnswerMapper;
@@ -13,6 +13,7 @@ import com.practicum.neuron.mapper.SubmitInfoMapper;
 import com.practicum.neuron.mapper.TableMapper;
 import com.practicum.neuron.service.CollectionService;
 import jakarta.annotation.Resource;
+import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.bson.Document;
 import org.springframework.stereotype.Component;
@@ -50,8 +51,9 @@ public class CollectionServiceImpl implements CollectionService {
         return answerSummaryList;
     }
 
+    @SneakyThrows
     @Override
-    public TableAnswer getOneTableUserAnswer(String tableId, String answerId) throws AnswerNotExistException, TableNotExistException {
+    public AdminTableAnswer getOneTableUserAnswer(String tableId, String answerId) {
         Optional<SubmitInfo> s = submitInfoMapper.findById(answerId);
         if (s.isPresent()) {
             SubmitInfo submitInfo = s.get();
@@ -75,7 +77,7 @@ public class CollectionServiceImpl implements CollectionService {
                         throw new AnswerNotExistException();
                     }
                 }
-                return TableAnswer.builder()
+                return AdminTableAnswer.builder()
                         .title(table.getTitle())
                         .respondent(respondent)
                         .date(submitInfo.getDate())

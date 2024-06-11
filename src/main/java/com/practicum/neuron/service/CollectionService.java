@@ -1,9 +1,7 @@
 package com.practicum.neuron.service;
 
 import com.practicum.neuron.entity.answer.AnswerSummary;
-import com.practicum.neuron.entity.table.TableAnswer;
-import com.practicum.neuron.exception.AnswerNotExistException;
-import com.practicum.neuron.exception.TableNotExistException;
+import com.practicum.neuron.entity.table.AdminTableAnswer;
 import lombok.SneakyThrows;
 import org.springframework.stereotype.Service;
 
@@ -25,7 +23,8 @@ public interface CollectionService {
      * @param tableId  表 id
      * @param answerId 回答 id
      * @return 表与对应的填报数据
+     * @see AdminTableAnswer
      */
     @SneakyThrows
-    TableAnswer getOneTableUserAnswer(String tableId, String answerId) throws AnswerNotExistException, TableNotExistException;
+    AdminTableAnswer getOneTableUserAnswer(String tableId, String answerId);
 }
