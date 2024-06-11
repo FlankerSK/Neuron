@@ -38,7 +38,7 @@ public class FillServiceImpl implements FillService {
     @Override
     public List<UserTableSummary> getTableSummary(String username) {
 
-        List<ReleaseInfo> list =  releaseInfoMapper.findByBeginningBeforeAndDeadlineAfter(
+        List<ReleaseInfo> list =  releaseInfoMapper.findAllByBeginningBeforeAndDeadlineAfter(
                 LocalDateTime.now(),
                 LocalDateTime.now()
         );

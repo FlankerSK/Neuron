@@ -15,6 +15,7 @@ import com.practicum.neuron.service.DesignService;
 import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
 import org.bson.Document;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
 import java.nio.charset.StandardCharsets;
@@ -26,6 +27,9 @@ import java.util.Base64;
 import java.util.List;
 import java.util.Optional;
 
+/**
+ * The type Design service.
+ */
 @Slf4j
 @Component
 public class DesignServiceImpl implements DesignService {
@@ -152,5 +156,25 @@ public class DesignServiceImpl implements DesignService {
         else {
             throw new TableNotExistException();
         }
+    }
+
+
+    /**
+     * 定时任务，检查提交的采集表是否已截止
+     */
+    @Scheduled(fixedRate = 60000)   // 60秒检查一次
+    public void checkReleaseTableEnd() {
+        LocalDateTime now = LocalDateTime.now();
+        List<ReleaseInfo> releaseInfoList = releaseInfoMapper.findAllByDeadlineBefore(now);
+        for (ReleaseInfo releaseInfo : releaseInfoList) {
+            String tableId = releaseInfo.getTableId();
+            Optional<Table> t = tableMapper.findById(tableId);
+            if(t.isPresent()) {
+                Table table = t.get();
+                table.setStatus(TableStatus.END);
+                tableMapper.save(table);
+            }
+        }
+        releaseInfoMapper.deleteAll(releaseInfoList);
     }
 }
