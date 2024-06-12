@@ -32,7 +32,7 @@ public class FillServiceImpl implements FillService {
     private ReleaseInfoMapper releaseInfoMapper;
 
     @Resource
-    private AccountMapper accountMapper;
+    private UserInfoMapper userInfoMapper;
 
     @Resource
     private AnswerMapper answerMapper;
@@ -53,7 +53,8 @@ public class FillServiceImpl implements FillService {
         List<UserTableSummary> summaryList = new ArrayList<>();
         for (ReleaseInfo releaseInfo : list) {
             // 只有满足填写规则的才会返回
-            if (releaseInfo.getFillRule().canFill(accountMapper.findUserInfoByUsername(username))) {
+            userInfoMapper.findUserInfoByUsername(username);
+            if (releaseInfo.getFillRule().canFill(userInfoMapper.findUserInfoByUsername(username))) {
                 summaryList.add(
                         UserTableSummary.builder()
                                 .id(releaseInfo.getTableId())

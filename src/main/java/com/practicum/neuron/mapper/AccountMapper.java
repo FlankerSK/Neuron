@@ -2,7 +2,6 @@ package com.practicum.neuron.mapper;
 
 import com.practicum.neuron.entity.account.SecurityInfo;
 import com.practicum.neuron.entity.account.User;
-import com.practicum.neuron.entity.account.UserInfo;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
@@ -78,13 +77,4 @@ public interface AccountMapper {
      * @param username 用户名
      */
     void deleteSecurityInfo(@Param("username") String username);
-
-
-    /**
-     * 根据用户名查询用户信息
-     *
-     * @param username the username
-     * @return the user info
-     */
-    UserInfo findUserInfoByUsername(@Param("username") String username);
 }

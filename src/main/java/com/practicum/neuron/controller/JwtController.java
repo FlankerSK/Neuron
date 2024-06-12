@@ -1,6 +1,6 @@
 package com.practicum.neuron.controller;
 
-import com.practicum.neuron.entity.response.RespondBody;
+import com.practicum.neuron.entity.response.ResponseBody;
 import com.practicum.neuron.entity.response.Status;
 import com.practicum.neuron.utils.JwtUtil;
 import jakarta.annotation.Resource;
@@ -26,10 +26,10 @@ public class JwtController {
      * @return 新的 accessToken
      */
     @PostMapping("/access-token")
-    public RespondBody refreshAccessToken(HttpServletRequest request) {
+    public ResponseBody refreshAccessToken(HttpServletRequest request) {
         String token = jwtUtil.getToken(request);
         String username = jwtUtil.getUserNameFromToken(token);
-        return new RespondBody(Status.SUCCESS, jwtUtil.createAccessToken(username));
+        return new ResponseBody(Status.SUCCESS, jwtUtil.createAccessToken(username));
     }
 
     /**
@@ -39,11 +39,11 @@ public class JwtController {
      * @return 新的 refreshToken
      */
     @PostMapping("/refresh-token")
-    public RespondBody refreshRefreshToken(HttpServletRequest request) {
+    public ResponseBody refreshRefreshToken(HttpServletRequest request) {
         String token = jwtUtil.getToken(request);
         String username = jwtUtil.getUserNameFromToken(token);
         // 注销令牌
         jwtUtil.blockToken(token, token, username);
-        return new RespondBody(Status.SUCCESS, jwtUtil.createAccessToken(username));
+        return new ResponseBody(Status.SUCCESS, jwtUtil.createAccessToken(username));
     }
 }

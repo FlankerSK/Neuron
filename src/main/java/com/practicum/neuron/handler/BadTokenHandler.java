@@ -1,6 +1,6 @@
 package com.practicum.neuron.handler;
 
-import com.practicum.neuron.entity.response.RespondBody;
+import com.practicum.neuron.entity.response.ResponseBody;
 import com.practicum.neuron.entity.response.Status;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.stereotype.Component;
@@ -25,7 +25,7 @@ public class BadTokenHandler {
         response.setCharacterEncoding("UTF-8");
         response.setContentType("application/json");
         response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-        response.getWriter().write(new RespondBody(Status.ACCESS_CREDENTIAL_EXPIRED).toJson());
+        response.getWriter().write(new ResponseBody(Status.ACCESS_CREDENTIAL_EXPIRED).toJson());
         response.getWriter().flush();
     }
 
@@ -41,7 +41,7 @@ public class BadTokenHandler {
         response.setCharacterEncoding("UTF-8");
         response.setContentType("application/json");
         response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-        response.getWriter().write(new RespondBody(Status.ACCESS_INVALID_TOKEN).toJson());
+        response.getWriter().write(new ResponseBody(Status.ACCESS_INVALID_TOKEN).toJson());
         response.getWriter().flush();
     }
 }

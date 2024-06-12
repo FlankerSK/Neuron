@@ -4,7 +4,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.practicum.neuron.entity.account.SecurityInfo;
 import com.practicum.neuron.entity.account.User;
-import com.practicum.neuron.entity.response.RespondBody;
+import com.practicum.neuron.entity.response.ResponseBody;
 import com.practicum.neuron.entity.response.Status;
 import com.practicum.neuron.service.AccountService;
 import jakarta.annotation.Resource;
@@ -13,7 +13,6 @@ import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 /**
@@ -33,8 +32,8 @@ public class AccountController {
 
     @SneakyThrows
     @PostMapping("/api/account/register")
-    @ResponseBody
-    public RespondBody register(HttpServletRequest request) {
+    @org.springframework.web.bind.annotation.ResponseBody
+    public ResponseBody register(HttpServletRequest request) {
         JsonNode jsonNode = objectMapper.readTree(request.getInputStream());
         String username = jsonNode.get("username").asText();
         String password = jsonNode.get("password").asText();
@@ -47,6 +46,6 @@ public class AccountController {
                 .email(email)
                 .build();
         accountService.register(user, info);
-        return new RespondBody(Status.SUCCESS);
+        return new ResponseBody(Status.SUCCESS);
     }
 }

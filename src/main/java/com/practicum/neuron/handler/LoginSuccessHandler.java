@@ -1,7 +1,7 @@
 package com.practicum.neuron.handler;
 
 import com.practicum.neuron.entity.account.LoginUser;
-import com.practicum.neuron.entity.response.RespondBody;
+import com.practicum.neuron.entity.response.ResponseBody;
 import com.practicum.neuron.entity.response.Status;
 import com.practicum.neuron.utils.JwtUtil;
 import jakarta.annotation.Resource;
@@ -37,7 +37,7 @@ public class LoginSuccessHandler implements AuthenticationSuccessHandler {
         data.put("refresh_token", refreshToken);
         data.put("access_token", accessToken);
         data.put("role", loginUser.getRole());
-        response.getWriter().write(new RespondBody(Status.SUCCESS, data).toJson());
+        response.getWriter().write(new ResponseBody(Status.SUCCESS, data).toJson());
         response.getWriter().flush();
     }
 }
