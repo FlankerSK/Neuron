@@ -3,7 +3,7 @@ package com.practicum.neuron.controller;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.practicum.neuron.entity.FillRule;
-import com.practicum.neuron.entity.response.RespondBody;
+import com.practicum.neuron.entity.response.ResponseBody;
 import com.practicum.neuron.entity.response.Status;
 import com.practicum.neuron.entity.table.AdminTableSummary;
 import com.practicum.neuron.entity.table.Table;
@@ -42,18 +42,18 @@ public class DesignController {
 
     @SneakyThrows
     @PostMapping("/table")
-    public RespondBody createTable(HttpServletRequest request) {
+    public ResponseBody createTable(HttpServletRequest request) {
         JsonNode jsonNode = objectMapper.readTree(request.getInputStream());
         String tittle = jsonNode.get("title").asText();
         String token = jwtUtil.getToken(request);
         String author = jwtUtil.getUserNameFromToken(token);
         String id = designService.createTable(tittle, author);
-        return new RespondBody(Status.SUCCESS, id);
+        return new ResponseBody(Status.SUCCESS, id);
     }
 
     @SneakyThrows
     @PutMapping("/table/{id}")
-    public RespondBody updateTable(@PathVariable String id, HttpServletRequest request) {
+    public ResponseBody updateTable(@PathVariable String id, HttpServletRequest request) {
         JsonNode jsonNode = objectMapper.readTree(request.getInputStream());
         String title = jsonNode.get("title").asText();
         JsonNode questionListNode = jsonNode.get("questions");
@@ -64,19 +64,19 @@ public class DesignController {
             questions.add(question);
         }
         designService.updateQuestion(id, title, questions);
-        return new RespondBody(Status.SUCCESS);
+        return new ResponseBody(Status.SUCCESS);
     }
 
     @SneakyThrows
     @PostMapping("/table/{id}/release")
-    public RespondBody releaseTable(@PathVariable String id, HttpServletRequest request) {
+    public ResponseBody releaseTable(@PathVariable String id, HttpServletRequest request) {
         JsonNode jsonNode = objectMapper.readTree(request.getInputStream());
         LocalDateTime beginning = LocalDateTime.parse(jsonNode.get("beginning").asText());
         LocalDateTime deadline = LocalDateTime.parse(jsonNode.get("deadline").asText());
         FillRule rule = objectMapper.treeToValue(jsonNode.get("fill_rule"), FillRule.class);
         if (beginning.isBefore(deadline)) {
             designService.releaseTable(id, beginning, deadline, rule);
-            return new RespondBody(Status.SUCCESS);
+            return new ResponseBody(Status.SUCCESS);
         }
         else {
             throw new InvalidDateException();
@@ -85,31 +85,31 @@ public class DesignController {
 
     @SneakyThrows
     @DeleteMapping("/table/{id}/release")
-    public ResponseEntity<RespondBody> stopReleaseTable(@PathVariable String id) {
+    public ResponseEntity<ResponseBody> stopReleaseTable(@PathVariable String id) {
         designService.stopRelease(id);
-        return new ResponseEntity<>(new RespondBody(Status.SUCCESS), HttpStatus.OK);
+        return new ResponseEntity<>(new ResponseBody(Status.SUCCESS), HttpStatus.OK);
     }
 
     @SneakyThrows
     @GetMapping("/table")
-    public RespondBody getTableSummary(HttpServletRequest request) {
+    public ResponseBody getTableSummary(HttpServletRequest request) {
         String token = jwtUtil.getToken(request);
         String username = jwtUtil.getUserNameFromToken(token);
         List<AdminTableSummary> summaryList = designService.getTableSummary(username);
-        return new RespondBody(Status.SUCCESS, summaryList);
+        return new ResponseBody(Status.SUCCESS, summaryList);
     }
 
     @SneakyThrows
     @GetMapping("/table/{id}")
-    public RespondBody getTable(@PathVariable String id) {
+    public ResponseBody getTable(@PathVariable String id) {
         Table table = designService.getTable(id);
-        return new RespondBody(Status.SUCCESS, table);
+        return new ResponseBody(Status.SUCCESS, table);
     }
 
     @SneakyThrows
     @DeleteMapping("/table/{id}")
-    public RespondBody deleteTable(@PathVariable String id) {
+    public ResponseBody deleteTable(@PathVariable String id) {
         designService.deleteTable(id);
-        return new RespondBody(Status.SUCCESS);
+        return new ResponseBody(Status.SUCCESS);
     }
 }

@@ -3,7 +3,7 @@ package com.practicum.neuron.controller;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.practicum.neuron.entity.answer.Answer;
-import com.practicum.neuron.entity.response.RespondBody;
+import com.practicum.neuron.entity.response.ResponseBody;
 import com.practicum.neuron.entity.response.Status;
 import com.practicum.neuron.entity.table.UserTableAnswer;
 import com.practicum.neuron.entity.table.UserTableSummary;
@@ -34,19 +34,19 @@ public class FillController {
 
     @SneakyThrows
     @GetMapping("/table")
-    public ResponseEntity<RespondBody> getTableSummary(HttpServletRequest request) {
+    public ResponseEntity<ResponseBody> getTableSummary(HttpServletRequest request) {
         String token = jwtUtil.getToken(request);
         String username = jwtUtil.getUserNameFromToken(token);
         List<UserTableSummary> summaryList = fillService.getTableSummary(username);
         return new ResponseEntity<>(
-                new RespondBody(Status.SUCCESS, summaryList),
+                new ResponseBody(Status.SUCCESS, summaryList),
                 HttpStatus.OK
         );
     }
 
     @SneakyThrows
     @PutMapping("/table/{id}/answer")
-    public RespondBody saveAnswer(@PathVariable String id, HttpServletRequest request) {
+    public ResponseBody saveAnswer(@PathVariable String id, HttpServletRequest request) {
         JsonNode jsonNode = objectMapper.readTree(request.getInputStream());
         String token = jwtUtil.getToken(request);
         String respondent = jwtUtil.getUserNameFromToken(token);
@@ -64,26 +64,26 @@ public class FillController {
             );
         }
         fillService.saveAnswer(id, respondent, answerList);
-        return new RespondBody(Status.SUCCESS);
+        return new ResponseBody(Status.SUCCESS);
     }
 
     @SneakyThrows
     @PutMapping("/table/{id}/answer/submit")
-    public RespondBody submitAnswer(@PathVariable String id, HttpServletRequest request) {
+    public ResponseBody submitAnswer(@PathVariable String id, HttpServletRequest request) {
         JsonNode jsonNode = objectMapper.readTree(request.getInputStream());
         String token = jwtUtil.getToken(request);
         String respondent = jwtUtil.getUserNameFromToken(token);
         LocalDateTime date = LocalDateTime.parse(jsonNode.get("date").asText());
         fillService.submitAnswer(id, respondent, date);
-        return new RespondBody(Status.SUCCESS);
+        return new ResponseBody(Status.SUCCESS);
     }
 
     @SneakyThrows
     @GetMapping("/table/{id}/answer")
-    public RespondBody getTableAnswer(@PathVariable String id, HttpServletRequest request) {
+    public ResponseBody getTableAnswer(@PathVariable String id, HttpServletRequest request) {
         String token = jwtUtil.getToken(request);
         String respondent = jwtUtil.getUserNameFromToken(token);
         UserTableAnswer tableAnswer = fillService.getTableAnswer(id, respondent);
-        return new RespondBody(Status.SUCCESS, tableAnswer);
+        return new ResponseBody(Status.SUCCESS, tableAnswer);
     }
 }

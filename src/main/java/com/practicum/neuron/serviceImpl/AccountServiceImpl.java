@@ -6,6 +6,7 @@ import com.practicum.neuron.exception.SamePasswordException;
 import com.practicum.neuron.exception.UserExistException;
 import com.practicum.neuron.exception.UserNotExistException;
 import com.practicum.neuron.mapper.AccountMapper;
+import com.practicum.neuron.mapper.UserInfoMapper;
 import com.practicum.neuron.service.AccountService;
 import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
@@ -19,6 +20,9 @@ import org.springframework.stereotype.Component;
 public class AccountServiceImpl implements AccountService {
     @Resource
     private AccountMapper accountMapper;
+
+    @Resource
+    private UserInfoMapper userInfoMapper;
 
     @Override
     public User getUser(String username) {
@@ -44,6 +48,7 @@ public class AccountServiceImpl implements AccountService {
         // 向数据库中添加用户信息与安全绑定信息
         accountMapper.addUser(username, password, role);
         accountMapper.addSecurityInfo(username, email, phone);
+        userInfoMapper.addUserInfo(username, email, phone);
     }
 
     @Override

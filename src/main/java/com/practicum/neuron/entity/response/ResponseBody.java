@@ -16,7 +16,7 @@ import java.io.Serializable;
  */
 @Data
 @Builder
-public class RespondBody implements Serializable {
+public class ResponseBody implements Serializable {
     private static final ObjectMapper mapper = new ObjectMapper();
 
     // 自定义响应码
@@ -31,13 +31,13 @@ public class RespondBody implements Serializable {
     @Default
     private Object data = null;
 
-    public RespondBody(int code, String message, Object data) {
+    public ResponseBody(int code, String message, Object data) {
         this.code = code;
         this.message = message;
         this.data = data;
     }
 
-    public RespondBody(Status status, Object data) {
+    public ResponseBody(Status status, Object data) {
         this.code = status.getCode();
         this.message = status.getMessage();
         this.data = data;
@@ -49,23 +49,23 @@ public class RespondBody implements Serializable {
      * @param status 响应状态
      * @see Status
      */
-    public RespondBody(Status status) {
+    public ResponseBody(Status status) {
         this.code = status.getCode();
         this.message = status.getMessage();
         this.data = null;
     }
 
-    public RespondBody setCode(int code) {
+    public ResponseBody setCode(int code) {
         this.code = code;
         return this;
     }
 
-    public RespondBody setMessage(String message) {
+    public ResponseBody setMessage(String message) {
         this.message = message;
         return this;
     }
 
-    public RespondBody setData(Object data) {
+    public ResponseBody setData(Object data) {
         this.data = data;
         return this;
     }

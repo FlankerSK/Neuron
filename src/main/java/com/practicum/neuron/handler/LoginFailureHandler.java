@@ -1,6 +1,6 @@
 package com.practicum.neuron.handler;
 
-import com.practicum.neuron.entity.response.RespondBody;
+import com.practicum.neuron.entity.response.ResponseBody;
 import com.practicum.neuron.entity.response.Status;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -26,24 +26,24 @@ public class LoginFailureHandler implements AuthenticationFailureHandler {
         response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
         String body;
         if (exception instanceof BadCredentialsException) {
-            body = new RespondBody(Status.LOGIN_BAD_CREDENTIAL).toJson();
+            body = new ResponseBody(Status.LOGIN_BAD_CREDENTIAL).toJson();
         }
         else if(exception instanceof AccountExpiredException) {
-            body = new RespondBody(Status.LOGIN_ACCOUNT_EXPIRED).toJson();
+            body = new ResponseBody(Status.LOGIN_ACCOUNT_EXPIRED).toJson();
         }
         else if(exception instanceof DisabledException) {
-            body = new RespondBody(Status.LOGIN_ACCOUNT_DISABLED).toJson();
+            body = new ResponseBody(Status.LOGIN_ACCOUNT_DISABLED).toJson();
         }
         else if(exception instanceof LockedException) {
-            body = new RespondBody(Status.LOGIN_ACCOUNT_LOCKED).toJson();
+            body = new ResponseBody(Status.LOGIN_ACCOUNT_LOCKED).toJson();
         }
         else if (exception instanceof CredentialsExpiredException) {
-            body = new RespondBody(Status.ACCESS_CREDENTIAL_EXPIRED).toJson();
+            body = new ResponseBody(Status.ACCESS_CREDENTIAL_EXPIRED).toJson();
         }
         else {
             Status status = new Status(Status.LOGIN_UNKNOWN_ERROR);
             status.setMessage(exception.getMessage());
-            body = new RespondBody(status).toJson();
+            body = new ResponseBody(status).toJson();
         }
         response.getWriter().write(body);
         response.getWriter().flush();
