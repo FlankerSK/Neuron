@@ -28,6 +28,10 @@
     <delete id="deleteSecurityInfoByUsername">
         DELETE FROM security_info WHERE username = #{username}
     </delete>
+    <insert id="addUserInfo">
+        INSERT INTO user_info (username, email, phone)
+            VALUE (#{username}, #{email}, #{phone})
+    </insert>
     <select id="findUserInfoByUsername" resultType="com.practicum.neuron.entity.account.UserInfo">
         SELECT username  from users where username = #{username};
     </select>

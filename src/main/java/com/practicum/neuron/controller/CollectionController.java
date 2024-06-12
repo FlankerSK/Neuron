@@ -1,7 +1,7 @@
 package com.practicum.neuron.controller;
 
 import com.practicum.neuron.entity.answer.AnswerSummary;
-import com.practicum.neuron.entity.response.RespondBody;
+import com.practicum.neuron.entity.response.ResponseBody;
 import com.practicum.neuron.entity.response.Status;
 import com.practicum.neuron.entity.table.AdminTableAnswer;
 import com.practicum.neuron.service.CollectionService;
@@ -22,15 +22,15 @@ public class CollectionController {
 
     @SneakyThrows
     @GetMapping("/table/{id}/answer")
-    public RespondBody getAnswers(@PathVariable String id) {
+    public ResponseBody getAnswers(@PathVariable String id) {
         List<AnswerSummary> list = collectionService.getAnswerList(id);
-        return new RespondBody(Status.SUCCESS, list);
+        return new ResponseBody(Status.SUCCESS, list);
     }
 
     @SneakyThrows
     @GetMapping("/table/{tableId}/answer/{AnswerId}")
-    public RespondBody getAnswers(@PathVariable String tableId, @PathVariable String AnswerId) {
+    public ResponseBody getAnswers(@PathVariable String tableId, @PathVariable String AnswerId) {
         AdminTableAnswer tableAnswer = collectionService.getOneTableUserAnswer(tableId, AnswerId);
-        return new RespondBody(Status.SUCCESS, tableAnswer);
+        return new ResponseBody(Status.SUCCESS, tableAnswer);
     }
 }

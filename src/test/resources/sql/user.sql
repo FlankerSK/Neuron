@@ -24,6 +24,25 @@ CREATE TABLE security_info(
     phone VARCHAR(15) NOT NULL DEFAULT ''
 ) DEFAULT CHARACTER SET 'utf8mb4';
 
+-- 创建表[用户信息表]
+DROP TABLE if EXISTS user_info;
+CREATE TABLE user_info(
+    username VARCHAR(100) PRIMARY KEY,
+    name VARCHAR(100) NOT NULL DEFAULT '', -- 真实姓名
+    id_number VARCHAR(18) NOT NULL DEFAULT '', -- 身份证号
+    birthday DATETIME, -- 出生日期
+    gender VARCHAR(18) NOT NULL DEFAULT '', -- 性别
+    address VARCHAR(255) NOT NULL DEFAULT '', -- 住址
+    phone VARCHAR(20) NOT NULL DEFAULT '', -- 手机号
+    email VARCHAR(255)  NOT NULL DEFAULT '', -- 邮箱
+    education_level VARCHAR(50) NOT NULL DEFAULT '', -- 学历
+    graduation_institution VARCHAR(255) NOT NULL DEFAULT '', -- 毕业院校
+    graduation_major VARCHAR(255) NOT NULL DEFAULT '', -- 毕业专业
+    hire_date DATETIME, -- 入职时间
+    department VARCHAR(255) NOT NULL DEFAULT '', -- 就职部门
+    position VARCHAR(255) NOT NULL DEFAULT '' -- 职位
+) DEFAULT CHARACTER SET 'utf8mb4';
+
 -- 添加用户
 INSERT INTO users (username, password, role)
 VALUES
@@ -34,3 +53,5 @@ INSERT INTO security_info (username, email)
 VALUES
     ('test1', 'communicationGCY@outlook.com'),
     ('test2', 'communicationGCY@outlook.com');
+
+INSERT INTO user_info (username) VALUES ('test1'), ('test2')
