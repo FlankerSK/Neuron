@@ -54,7 +54,7 @@ public class FillController {
         List<Answer> answerList = new ArrayList<>();
         for (JsonNode answerNode : answerListNode) {
             String fingerprint = answerNode.get("fingerprint").asText();
-            String[] answers = objectMapper.treeToValue(answerNode.get("answers"), String[].class);
+            String[] answers = objectMapper.treeToValue(answerNode.get("answers"),String[].class);
             answerList.add(Answer.builder()
                     .tableId(id)
                     .respondent(respondent)

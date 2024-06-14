@@ -23,7 +23,8 @@ public class JwtLoginFilter extends UsernamePasswordAuthenticationFilter {
             HttpServletRequest request,
             HttpServletResponse response
     ) throws AuthenticationException {
-        if ("application/json".equals(request.getContentType())) {
+        String contentType = request.getContentType();
+        if (contentType.contains("application/json")) {
             try {
                 JsonNode node = objectMapper.readTree(request.getInputStream());
                 String username = node.get("username").asText();

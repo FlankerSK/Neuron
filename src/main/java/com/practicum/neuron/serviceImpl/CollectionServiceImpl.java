@@ -43,7 +43,7 @@ public class CollectionServiceImpl implements CollectionService {
                     AnswerSummary.builder()
                             .answerId(submitInfo.getId())
                             .tableId(tableId)
-                            .respondent((submitInfo.getId()))
+                            .respondent((submitInfo.getRespondent()))
                             .date(submitInfo.getDate())
                             .build()
             );
@@ -81,7 +81,7 @@ public class CollectionServiceImpl implements CollectionService {
                         .title(table.getTitle())
                         .respondent(respondent)
                         .date(submitInfo.getDate())
-                        .questionAnswers(questionAnswer)
+                        .question_answers(questionAnswer)
                         .build();
             }
             else {

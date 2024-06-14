@@ -12,6 +12,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -30,9 +31,13 @@ public class AccountController {
     @Resource
     private AccountService accountService;
 
+    @GetMapping("/api/token/test")
+    public ResponseBody test(HttpServletRequest request) {
+        return new ResponseBody(Status.SUCCESS);
+    }
+
     @SneakyThrows
     @PostMapping("/api/account/register")
-    @org.springframework.web.bind.annotation.ResponseBody
     public ResponseBody register(HttpServletRequest request) {
         JsonNode jsonNode = objectMapper.readTree(request.getInputStream());
         String username = jsonNode.get("username").asText();

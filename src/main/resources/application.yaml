@@ -4,6 +4,7 @@ server:
 spring:
   application:
     name: neuron
+
   # mysql数据库配置
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
@@ -36,6 +37,5 @@ jwt:
 
 mybatis:
   mapper-locations: classpath:mapper/*
-
 
 

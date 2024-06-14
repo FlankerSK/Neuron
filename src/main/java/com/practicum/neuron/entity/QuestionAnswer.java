@@ -1,11 +1,9 @@
 package com.practicum.neuron.entity;
 
-import lombok.Builder;
 import lombok.Data;
 import org.bson.Document;
 
 @Data
-@Builder
 public class QuestionAnswer {
     private Document question;
     private String[] answers;
