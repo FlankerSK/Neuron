@@ -20,5 +20,5 @@ public class AdminTableAnswer {
     private LocalDateTime date;
 
     // 问题与对应的答案列表
-    private List<QuestionAnswer> questionAnswers;
+    private List<QuestionAnswer> question_answers;
 }

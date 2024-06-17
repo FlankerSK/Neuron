@@ -157,7 +157,7 @@ public class FillServiceImpl implements FillService {
             }
             return UserTableAnswer.builder()
                     .title(table.getTitle())
-                    .questionAnswers(questionAnswer)
+                    .question_answers(questionAnswer)
                     .build();
         }
         else {

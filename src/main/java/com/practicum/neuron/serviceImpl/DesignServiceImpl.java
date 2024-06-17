@@ -70,8 +70,11 @@ public class DesignServiceImpl implements DesignService {
 
             //  给每个问题都提供一个数字指纹
             for (Document question : questions) {
+                question.remove("fingerprint");
+                log.info(question.toJson());
                 byte[] data = question.toJson().getBytes(StandardCharsets.UTF_8);
                 byte[] fingerprint = MessageDigest.getInstance("SHA-256").digest(data);
+                log.info(Base64.getEncoder().encodeToString(fingerprint));
                 question.put("fingerprint", Base64.getEncoder().encodeToString(fingerprint));
             }
             table.setQuestions(questions);

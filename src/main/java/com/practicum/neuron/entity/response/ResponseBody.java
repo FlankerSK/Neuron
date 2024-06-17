@@ -11,8 +11,6 @@ import java.io.Serializable;
 
 /**
  * 后端响应体
- *
- *
  */
 @Data
 @Builder

@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 
 /**
- * Jwt Token 认证控制器
+ * Jwt 认证控制器
  */
 @RestController
 @RequestMapping("/api/token")

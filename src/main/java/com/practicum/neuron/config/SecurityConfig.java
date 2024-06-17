@@ -66,11 +66,11 @@ public class SecurityConfig {
             AuthenticationManager authenticationManager
     ) throws Exception {
         return http
-                //禁用HttpBasic认证
+                // 禁用HttpBasic认证
                 .httpBasic(AbstractHttpConfigurer::disable)
-                //禁用默认登录页面
+                // 禁用默认登录页面
                 .formLogin(AbstractHttpConfigurer::disable)
-                //禁用默认登出页面，设置自定义登出处理器
+                // 禁用默认登出页面，设置自定义登出处理器
                 .logout(
                         logout -> logout
                                 .logoutUrl(logoutUrl)
@@ -79,9 +79,9 @@ public class SecurityConfig {
                                 .addLogoutHandler(logoutHandler)
                                 .logoutSuccessHandler(logoutSuccessHandler)
                 )
-                //禁用session
+                // 禁用session
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-                //设置权限
+                // 设置权限
                 .authorizeHttpRequests(
                         auth -> auth
                                 // /api/token/** (刷新 token) 与登出操作需要认证
@@ -93,14 +93,15 @@ public class SecurityConfig {
                                 // 其他区域无需认证
                                 .anyRequest().permitAll()
                 )
+                // 禁用 CSRF
                 .csrf(AbstractHttpConfigurer::disable)
-                //自定义用户认证失败的处理器
+                // 自定义用户认证失败的处理器
                 .exceptionHandling(
                         exceptionHandlingConfigurer -> exceptionHandlingConfigurer
                                 .authenticationEntryPoint(authenticationEntryPoint())
                                 .accessDeniedHandler(noAuthorityHandler)
                 )
-                //添加JWT的处理过滤器
+                // 添加JWT的处理过滤器
                 .addFilterAt(jwtLoginFilter(authenticationManager), UsernamePasswordAuthenticationFilter.class)
                 .addFilterBefore(jwtAuthenticationTokenFilter, JwtLoginFilter.class)
                 .build();
