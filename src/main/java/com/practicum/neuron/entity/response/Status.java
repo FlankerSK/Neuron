@@ -1,4 +1,4 @@
-package com.practicum.neuron.dto;
+package com.practicum.neuron.entity.response;
 
 import lombok.Builder;
 import lombok.Data;
@@ -11,7 +11,6 @@ import lombok.Data;
 public class Status {
     // 错误码
     private int code;
-
     //错误信息
     private String message;
 
@@ -39,8 +38,10 @@ public class Status {
     public final static Status LOGIN_ACCOUNT_DISABLED = new Status(1006, "账号不可用");
 
     /*  2XXX 注册错误  */
-    public final static Status REGISTER_UNKNOWN_ERROR = new Status(2007, "未知注册错误");
-    public final static Status REGISTER_USER_EXIST = new Status(2008, "用户名已存在");
+    public final static Status REGISTER_UNKNOWN_ERROR = new Status(2000, "未知注册错误");
+    public final static Status REGISTER_USER_EXIST = new Status(2001, "用户名已存在");
+    public final static Status REGISTER_USER_NOT_EXIST = new Status(2002, "用户名不存在");
+    public final static Status REGISTER_SAME_PASSWORD = new Status(2003, "旧密码与新密码相同");
 
     /*  3XXX 访问错误  */
     public final static Status ACCESS_UNKNOWN_ERROR = new Status(3000, "未知访问错误");
@@ -50,4 +51,17 @@ public class Status {
     public final static Status ACCESS_NO_AUTHORITY = new Status(3004, "当前用户没有访问权限");
     public final static Status ACCESS_CREDENTIAL_EXPIRED = new Status(3005, "登录凭据已过期");
     public final static Status ACCESS_INVALID_TOKEN = new Status(3006, "无效的Token");
+    public final static Status ACCESS_INVALID_PARAMETER = new Status(3007, "无效的参数");
+
+    /* 4XXX 数据采集表错误 */
+    public final static Status TABLE_UNKNOWN_ERROR = new Status(4000, "未知采集表错误");
+    public final static Status TABLE_NOT_EXIST = new Status(4001, "数据采集表不存在");
+    public final static Status TABLE_UNPUBLISHED = new Status(4002, "数据采集表未发布");
+    public final static Status TABLE_ALREADY_PUBLISHED = new Status(4003, "数据采集表已发布");
+    public final static Status TABLE_ALREADY_END = new Status(4004, "数据采集表已结束收集");
+    public final static Status TABLE_INVALID_TIME = new Status(4005, "无效的时间参数");
+
+    /* 5XXX 采集数据错误 */
+    public final static Status DATA_UNKNOWN_ERROR = new Status(5000, "未知采集数据错误");
+    public final static Status DATA_NOT_EXIST = new Status(4001, "采集数据不存在");
 }

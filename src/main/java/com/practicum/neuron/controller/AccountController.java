@@ -1,81 +1,51 @@
 package com.practicum.neuron.controller;
 
+import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.practicum.neuron.dto.ResponseDto;
-import com.practicum.neuron.dto.Status;
-import com.practicum.neuron.utils.JwtUtil;
+import com.practicum.neuron.entity.account.SecurityInfo;
+import com.practicum.neuron.entity.account.User;
+import com.practicum.neuron.entity.response.ResponseBody;
+import com.practicum.neuron.entity.response.Status;
+import com.practicum.neuron.service.AccountService;
 import jakarta.annotation.Resource;
 import jakarta.servlet.http.HttpServletRequest;
+import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 /**
- * The type Account controller.
+ * 账户系统控制器
  */
 @Slf4j
 @RestController
 public class AccountController {
     @Resource
+    private PasswordEncoder passwordEncoder;
+
+    @Resource
     private ObjectMapper objectMapper;
 
     @Resource
-    JwtUtil jwtUtil;
+    private AccountService accountService;
 
-    /**
-     * 刷新 accessToken
-     *
-     * @param request HTTP请求
-     * @return 新的 accessToken
-     */
-    @PostMapping("/refresh/access-token")
-    public ResponseEntity<ResponseDto> refreshAccessToken(HttpServletRequest request) {
-        String token = jwtUtil.getToken(request);
-        String username = jwtUtil.getUserNameFromToken(token);
-        ResponseDto data = new ResponseDto(Status.SUCCESS, jwtUtil.createAccessToken(username));
-        return new ResponseEntity<>(data, HttpStatus.OK);
-    }
-
-    /**
-     * Hello response entity.
-     *
-     * @return the response entity
-     */
-    @GetMapping("/hello")
-    public ResponseEntity<ResponseDto> hello() {
-        return new ResponseEntity<>(
-                new ResponseDto(Status.SUCCESS),
-                HttpStatus.OK
-        );
-
-    }
-
-    /**
-     * Admin response entity.
-     *
-     * @return the response entity
-     */
-    @GetMapping("/admin/")
-    public ResponseEntity<ResponseDto> admin() {
-        return new ResponseEntity<>(
-                new ResponseDto(Status.SUCCESS, "请求的的资源"),
-                HttpStatus.OK
-        );
-    }
-
-    /**
-     * User response entity.
-     *
-     * @return the response entity
-     */
-    @GetMapping("/user/")
-    public ResponseEntity<ResponseDto> user() {
-        return new ResponseEntity<>(
-                new ResponseDto(Status.SUCCESS, "请求的的资源"),
-                HttpStatus.OK
-        );
+    @SneakyThrows
+    @PostMapping("/api/account/register")
+    @org.springframework.web.bind.annotation.ResponseBody
+    public ResponseBody register(HttpServletRequest request) {
+        JsonNode jsonNode = objectMapper.readTree(request.getInputStream());
+        String username = jsonNode.get("username").asText();
+        String password = jsonNode.get("password").asText();
+        String email = jsonNode.get("email").asText();
+        String role = jsonNode.get("role").asText();
+        // 对密码进行加密
+        String encodePassword = passwordEncoder.encode(password);
+        User user = new User(username, encodePassword, role);
+        SecurityInfo info = SecurityInfo.builder()
+                .email(email)
+                .build();
+        accountService.register(user, info);
+        return new ResponseBody(Status.SUCCESS);
     }
 }

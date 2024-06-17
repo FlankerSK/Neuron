@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.practicum.neuron.mapper.UserInfoMapper">
+    <insert id="addUserInfo">
+        INSERT INTO user_info (username, email, phone)
+            VALUE (#{username}, #{email}, #{phone})
+    </insert>
+    <select id="findUserInfoByUsername" resultType="com.practicum.neuron.entity.account.UserInfo">
+        SELECT * from user_info where username = #{username};
+    </select>
+    <update id="updateUserInfo">
+        REPLACE INTO user_info (
+                                username,
+                                name,
+                                id_number,
+                                birthday,
+                                gender,
+                                address,
+                                phone,
+                                email,
+                                education_level,
+                                graduation_institution,
+                                graduation_major,
+                                hire_date,
+                                department,
+                                position
+        )
+        VALUES (
+                #{username},
+                #{name},
+                #{id_number},
+                #{birthday},
+                #{gender},
+                #{address},
+                #{phone},
+                #{email},
+                #{education_level},
+                #{graduation_institution},
+                #{graduation_major},
+                #{hire_date},
+                #{department},
+                #{position}
+               )
+    </update>
+</mapper>

@@ -1,7 +1,7 @@
 package com.practicum.neuron.handler;
 
-import com.practicum.neuron.dto.ResponseDto;
-import com.practicum.neuron.dto.Status;
+import com.practicum.neuron.entity.response.ResponseBody;
+import com.practicum.neuron.entity.response.Status;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.security.core.Authentication;
@@ -21,7 +21,7 @@ public class JwtLogoutSuccessHandler implements LogoutSuccessHandler {
         response.setContentType("application/json");
         response.setCharacterEncoding("UTF-8");
         PrintWriter writer = response.getWriter();
-        writer.write(new ResponseDto(Status.SUCCESS).toJson());
+        writer.write(new ResponseBody(Status.SUCCESS).toJson());
         writer.flush();
         writer.close();
     }

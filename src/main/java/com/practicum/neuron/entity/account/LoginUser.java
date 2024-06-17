@@ -1,4 +1,4 @@
-package com.practicum.neuron.po;
+package com.practicum.neuron.entity.account;
 
 import lombok.Builder;
 import lombok.Data;
@@ -12,7 +12,7 @@ import java.util.List;
 
 @Data
 @Builder
-public class User implements UserDetails {
+public class LoginUser implements UserDetails {
     private int id;
     private String username;
     private String password;

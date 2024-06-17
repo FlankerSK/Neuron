@@ -1,4 +1,4 @@
-package com.practicum.neuron.dto;
+package com.practicum.neuron.entity.response;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -11,12 +11,10 @@ import java.io.Serializable;
 
 /**
  * 后端响应体
- *
- *
  */
 @Data
 @Builder
-public class ResponseDto implements Serializable {
+public class ResponseBody implements Serializable {
     private static final ObjectMapper mapper = new ObjectMapper();
 
     // 自定义响应码
@@ -31,13 +29,13 @@ public class ResponseDto implements Serializable {
     @Default
     private Object data = null;
 
-    public ResponseDto(int code, String message, Object data) {
+    public ResponseBody(int code, String message, Object data) {
         this.code = code;
         this.message = message;
         this.data = data;
     }
 
-    public ResponseDto(Status status, Object data) {
+    public ResponseBody(Status status, Object data) {
         this.code = status.getCode();
         this.message = status.getMessage();
         this.data = data;
@@ -49,23 +47,23 @@ public class ResponseDto implements Serializable {
      * @param status 响应状态
      * @see Status
      */
-    public ResponseDto(Status status) {
+    public ResponseBody(Status status) {
         this.code = status.getCode();
         this.message = status.getMessage();
         this.data = null;
     }
 
-    public ResponseDto setCode(int code) {
+    public ResponseBody setCode(int code) {
         this.code = code;
         return this;
     }
 
-    public ResponseDto setMessage(String message) {
+    public ResponseBody setMessage(String message) {
         this.message = message;
         return this;
     }
 
-    public ResponseDto setData(Object data) {
+    public ResponseBody setData(Object data) {
         this.data = data;
         return this;
     }

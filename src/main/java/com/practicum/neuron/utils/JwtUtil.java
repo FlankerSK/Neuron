@@ -152,7 +152,7 @@ public class JwtUtil {
 
     //================ public methods ==================
     /**
-     * 从 请求 中获取token
+     * 从请求中获取 token
      *
      * @param request HTTP 请求
      * @return 登录用户名 string
