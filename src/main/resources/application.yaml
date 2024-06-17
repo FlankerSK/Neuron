@@ -7,7 +7,7 @@ spring:
   # mysql数据库配置
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://localhost:3306/neuron?characterEncoding=utf-8
+    url: jdbc:mysql://mysql:3306/neuron?characterEncoding=utf-8
     username: root
     password: glgjss17yfhbqz
   data:
@@ -17,7 +17,7 @@ spring:
       database: neuron
     # Redis数据库配置
     redis:
-      host: localhost
+      host: redis
       port: 6379
       repositories:
         enabled: false

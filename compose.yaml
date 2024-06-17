@@ -1,0 +1,55 @@
+networks:
+  neuron-network:
+services:
+  app:
+    container_name: neuron-serve
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - '8080:8080'
+    depends_on:
+      - mysql
+      - mongodb
+      - redis
+    volumes:
+      - '/etc/localtime:/etc/localtime:ro'
+    networks:
+      - neuron-network
+  mysql:
+    container_name: mysql
+    build:
+      context: .
+      dockerfile: Mysql-Dockerfile
+    environment:
+      MYSQL_DATABASE: neuron
+      MYSQL_ROOT_PASSWORD: glgjss17yfhbqz
+      MYSQL_ROOT_HOST: '%'
+    command: [
+        '--innodb-buffer-pool-size=20M',
+        '--character-set-server=utf8mb4',
+        '--collation-server=utf8mb4_general_ci',
+    ]
+    ports:
+        - "3306:3306"
+    restart: always
+    volumes:
+      - '/data/mysql_data:/var/lib/mysql'
+      - '/etc/localtime:/etc/localtime:ro'
+    networks:
+      - neuron-network
+  mongodb:
+    image: 'mongo'
+    environment:
+      - 'MONGO_INITDB_DATABASE=neuron'
+    ports:
+      - '27017:27017'
+    networks:
+      - neuron-network
+  redis:
+    image: 'redis'
+    ports:
+      - '6379:6379'
+    networks:
+      - neuron-network
+
